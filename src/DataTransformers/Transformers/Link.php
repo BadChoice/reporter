@@ -21,11 +21,4 @@ class Link implements TransformsRowInterface {
         }
         return link_to($link, $text, ["class" => $class] );
     }
-
-    protected function getValue($object, $field){
-        return collect(explode('.', $field))->reduce( function ($carry, $item) {
-            return isset($carry->$item) ? $carry->$item : "";
-        }, $object);
-    }
-
 }

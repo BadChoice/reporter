@@ -1,6 +1,6 @@
 <?php
 
-namespace BadChoice\Reports\Exporters;
+namespace BadChoice\Reports\Exporters\Old;
 
 use Maatwebsite\Excel\Facades\Excel;
 

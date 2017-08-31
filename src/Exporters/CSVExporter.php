@@ -2,67 +2,20 @@
 
 namespace BadChoice\Reports\Exporters;
 
+use BadChoice\Reports\Exporters\BaseExporter2;
+use Maatwebsite\Excel\Facades\Excel;
 use Response;
 
-class CSVExporter extends BaseExporter implements ReportExporter{
+class CsvExporter extends BaseExporter {
 
-    public function download( $name ) {
-        return $this->fromQuery( $name );
+    protected $output = '';
+
+    public function download(){
+        return $this->makeResponse("TODO_give_title");
     }
 
-    /**
-     * @param $title
-     * @param $raw
-     * @return mixed
-     */
-    static function fromRaw($title, $raw){
-        return (new static)->makeResponse($raw,$title);
-    }
-
-    /**
-     * This functions creates a CSV from a collection, if the collection is too big there will be a memory error (when doing the get before calling this function)
-     * eloquent
-     * @param $title string Desired output filename
-     * @param \Illuminate\Support\Collection $collection the collection (after performing the get)
-     * @return mixed
-     */
-    function fromCollection($title, $collection){
-        $output = '';
-        $this->writeHeader($output);
-        $this->parseCollection($collection, function($newRow) use(&$output){
-            $this->writeRow($output, $newRow);
-        });
-        return $this->makeResponse($output, $title);
-    }
-
-    /**
-     * This functions uses the chunk method, that basically does small queries so the ram is not eated by
-     * eloquent
-     *
-     * @param $title string output filename
-     * @return mixed
-     */
-    function fromQuery($title){
-        $output='';
-        $this->writeHeader($output);
-        $this->parseQuery(function($newRow) use(&$output){
-            $this->writeRow($output, $newRow);
-        });
-        return $this->makeResponse($output, $title);
-    }
-
-    private function writeHeader(&$output){
-        foreach($this->fields as $rowName){
-            $output.= $rowName . ';';
-        }
-        $output .= PHP_EOL;
-    }
-
-    private function writeRow(&$output, $newRow){
-        foreach($newRow as $key => $value){
-            $output .=  $value . ';';
-        }
-        $output .= PHP_EOL;
+    public function print(){
+        return $this->output;
     }
 
     private function getHeaders($title){
@@ -72,7 +25,31 @@ class CSVExporter extends BaseExporter implements ReportExporter{
         ];
     }
 
-    private function makeResponse($output, $title){
-        return Response::make(rtrim($output, "\n"), 200, $this->getHeaders($title));
+    private function makeResponse($title){
+        return Response::make(rtrim($this->output, "\n"), 200, $this->getHeaders($title));
+    }
+
+    public function init()      { }
+    public function finalize()  { }
+
+    public function generate(){
+        $this->writeHeader();
+        $this->forEachRecord(function($row){
+            $this->writeRow($row);
+        });
+    }
+
+    private function writeHeader(){
+        foreach($this->getExportFields() as $field){
+            $this->output.= $field->getTitle() . ';';
+        }
+        $this->output .= PHP_EOL;
+    }
+
+    private function writeRow($row){
+        foreach ($this->getExportFields() as $field){
+            $this->output .=  $field->getValue($row) . ';';
+        }
+        $this->output .= PHP_EOL;
     }
 }

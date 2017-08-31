@@ -2,39 +2,30 @@
 
 namespace BadChoice\Reports\Exporters;
 
-class HtmlExporter{
+class HtmlExporter extends BaseExporter{
     protected $output       = "";
     public    $tableClasses = "tableList striped";
 
-    protected $fields;
-    protected $collection;
-
-    public function __construct($fields, $collection){
-        $this->fields       = $fields;
-        $this->collection   = $collection;
-    }
-
     public function print(){
-        $this->initTable    ();
-        $this->addHeader    ();
-        $this->addBody      ();
-        $this->closeTable   ();
         return $this->output;
     }
 
-    private function initTable(){
+    protected function init(){
         $this->output .= "<table class='".$this->tableClasses."'>";
     }
 
-    private function closeTable(){
+    protected function finalize(){
         $this->output .="</table>";
     }
 
-    public function addHeader(){
+    protected function generate(){
+        $this->addHeader();
+        $this->addBody();
+    }
+
+    protected function addHeader(){
         $this->output .= "<thead class='sticky'><tr>";
-        foreach( $this->fields as $field){
-            if( $field->shouldIgnore ) continue;
-            //TODO: add sortable
+        foreach( $this->getExportFields() as $field){
             $classes = $field->hideMobile ? "hide-mobile" : "";
             if($field->sortable)
                 $this->output .= "<th classes='".$classes."'><a href='?sort={$field->field}'>{$field->getTitle()}</a></th>";
@@ -44,17 +35,16 @@ class HtmlExporter{
         $this->output .= "</tr></thead>";
     }
 
-    public function addBody(){
+    protected function addBody(){
         $this->output .="<tbody>";
-        foreach($this->collection as $key => $row) {
+        $this->forEachRecord(function($row){
             $this->output .= "<tr>";
-            foreach($this->fields as $field){
-                if( $field->shouldIgnore ) continue;
+            foreach($this->getExportFields() as $field){
                 $classes = $field->hideMobile ? "hide-mobile" : "";
                 $this->output .= "<td class='".$classes."'>{$field->getValue($row)}</td>";
             }
             $this->output .= "</tr>";
-        }
+        });
         $this->output .="</tbody>";
     }
 }
