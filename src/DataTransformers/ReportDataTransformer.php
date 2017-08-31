@@ -1,35 +1,35 @@
 <?php
 
-namespace BadChoice\Reports\DataTransformer;
+namespace BadChoice\Reports\DataTransformers;
 
 class ReportDataTransformer{
 
-    public static function transform($object, $field){
-        $transformed = static::applyTransformation($object,$field);
-        return static::applyLabel($transformed, $object, $field);
+    public static function transform($field, $value, $transformation, $transformData = null){
+        $transformed = static::applyTransformation($field, $value, $transformation, $transformData);
+        return $transformed;
+        //return static::applyLabel($transformed, $object, $field);
     }
 
-    public static function applyLabel($transformed,$object,$field){
+    /*public static function applyLabel($transformed,$object,$field){
         if( isset($field["label"]) ){
             $labelClass = object_get($object, $field['label']);
             return "<span class='label$labelClass'> $transformed </span>";
         }
         return $transformed;
-    }
+    }*/
 
-    public static function applyTransformation($object, $field){
-        $transformer = static::getTransformer( ucFirst($field['type']) );
+    public static function applyTransformation($field, $value, $transformation, $transformData){
+        $transformer = static::getTransformer( ucFirst($transformation) );
 
         if( ! class_exists($transformer) ) {
-            return object_get($object, $field['field']);
+            return $value;
         }
 
         if ( static::doesImplement("TransformsRowInterface", $transformer) ){
-            return (new $transformer)->transformRow($object, $field);
+            return (new $transformer)->transformRow($field, $value, $transformData);
         }
 
         if ( static::doesImplement("TransformsValueInterface", $transformer) ){
-            $value = object_get($object, $field['field']);
             return (new $transformer)->transform($value);
         }
 
@@ -43,5 +43,4 @@ class ReportDataTransformer{
     private static function doesImplement($interface, $transformer){
         return  ( in_array( __NAMESPACE__ ."\\" . $interface, class_implements($transformer)) );
     }
-
 }

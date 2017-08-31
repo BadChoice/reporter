@@ -1,7 +1,7 @@
 <?php
 
-namespace BadChoice\Reports\DataTransformer;
+namespace BadChoice\Reports\DataTransformers;
 
 interface TransformsRowInterface{
-    public function transformRow($object, $row);
+    public function transformRow($key, $value, $transformData);
 }

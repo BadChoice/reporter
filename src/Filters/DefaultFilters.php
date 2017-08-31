@@ -103,7 +103,7 @@ class DefaultFilters extends QueryFilters {
      * @param $filters
      * @return mixed
      */
-    protected function addDefaultFilters($filters){
+    protected function addDefaultFilters( $filters ){
         if($this->defaultSort != null){
             if(!array_key_exists("sort",$filters) || $filters['sort'] == null){
                 $filters["sort"] = $this->defaultSort;

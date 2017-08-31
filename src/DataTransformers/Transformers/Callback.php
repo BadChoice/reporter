@@ -1,8 +1,8 @@
 <?php
 
-namespace BadChoice\Reports\DataTransformer\Transformers;
+namespace BadChoice\Reports\DataTransformers\Transformers;
 
-use BadChoice\Reports\DataTransformer\TransformsRowInterface;
+use BadChoice\Reports\DataTransformers\TransformsRowInterface;
 
 class Callback implements TransformsRowInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace BadChoice\Reports\DataTransformer;
+namespace BadChoice\Reports\DataTransformers;
 
 interface TransformsValueInterface{
     public function transform($value);

@@ -1,8 +1,8 @@
 <?php
 
-namespace BadChoice\Reports\DataTransformer\Transformers;
+namespace BadChoice\Reports\DataTransformers\Transformers;
 
-use BadChoice\Reports\DataTransformer\TransformsValueInterface;
+use BadChoice\Reports\DataTransformers\TransformsValueInterface;
 
 class Percentage implements TransformsValueInterface
 {

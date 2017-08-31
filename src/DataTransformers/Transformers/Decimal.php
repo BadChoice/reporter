@@ -4,9 +4,8 @@ namespace BadChoice\Reports\DataTransformers\Transformers;
 
 use BadChoice\Reports\DataTransformers\TransformsValueInterface;
 
-class Date implements TransformsValueInterface
-{
+class Decimal implements TransformsValueInterface{
     public function transform($value){
-        return substr(timeZoned($value),0,10);
+        return number_format($value,2);
     }
 }
