@@ -29,14 +29,4 @@ abstract class ReportExporter{
     }
 
     protected abstract function getFields();
-
-    protected function getDateTotalizeFields(){
-        $totalize = Filters::find("totalize");
-        return [
-            ExportField::make('opened',         trans_choice("admin.day",1))         ->ignoreWhen(!($totalize == 'day'))->transform('dateDay')->hideMobile()->sortable(),
-            ExportField::make('opened',         trans_choice("admin.month",1))       ->ignoreWhen(!($totalize == 'day' || $totalize == 'month'))->transform('dateMonth')->hideMobile()->sortable(),
-            ExportField::make('opened',         trans_choice("admin.year",1))        ->ignoreWhen(!($totalize == 'day' || $totalize == 'month'))->transform('dateYear')->hideMobile()->sortable(),
-            ExportField::make('opened',         trans_choice("admin.dayofweek",1))   ->ignoreWhen(!($totalize == 'dayofweek'))->transform('dayofweek')->hideMobile()->sortable(),
-        ];
-    }
 }
