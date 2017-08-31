@@ -10,8 +10,8 @@ class CsvExporter extends BaseExporter {
 
     protected $output = '';
 
-    public function download(){
-        return $this->makeResponse("TODO_give_title");
+    public function download($title){
+        return $this->makeResponse($title);
     }
 
     public function print(){
@@ -51,5 +51,9 @@ class CsvExporter extends BaseExporter {
             $this->output .=  $field->getValue($row) . ';';
         }
         $this->output .= PHP_EOL;
+    }
+
+    protected function getType(){
+        return "csv";
     }
 }

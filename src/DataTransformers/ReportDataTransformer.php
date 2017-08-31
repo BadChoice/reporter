@@ -4,8 +4,8 @@ namespace BadChoice\Reports\DataTransformers;
 
 class ReportDataTransformer{
 
-    public static function transform($field, $value, $transformation, $transformData = null){
-        $transformed = static::applyTransformation($field, $value, $transformation, $transformData);
+    public static function transform($row, $field, $value, $transformation, $transformData = null){
+        $transformed = static::applyTransformation($row, $field, $value, $transformation, $transformData);
         return $transformed;
         //return static::applyLabel($transformed, $object, $field);
     }
@@ -18,7 +18,7 @@ class ReportDataTransformer{
         return $transformed;
     }*/
 
-    public static function applyTransformation($field, $value, $transformation, $transformData){
+    public static function applyTransformation($row, $field, $value, $transformation, $transformData){
         $transformer = static::getTransformer( ucFirst($transformation) );
 
         if( ! class_exists($transformer) ) {
@@ -26,7 +26,7 @@ class ReportDataTransformer{
         }
 
         if ( static::doesImplement("TransformsRowInterface", $transformer) ){
-            return (new $transformer)->transformRow($field, $value, $transformData);
+            return (new $transformer)->transformRow($field, $row, $value, $transformData);
         }
 
         if ( static::doesImplement("TransformsValueInterface", $transformer) ){

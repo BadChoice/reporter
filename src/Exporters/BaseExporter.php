@@ -13,6 +13,7 @@ abstract class BaseExporter{
     protected abstract function init();
     protected abstract function generate();
     protected abstract function finalize();
+    protected abstract function getType();
 
     public function __construct($fields, $collection){
         $this->fields       = collect($fields);
@@ -27,10 +28,11 @@ abstract class BaseExporter{
         return $this;
     }
 
-
     protected function getExportFields(){
-        return $this->fields->reject(function($exportFeld) {
-            return $exportFeld->shouldIgnore;
+        return $this->fields->reject(function($exportfield) {
+            return $exportfield->shouldIgnore || in_array($this->getType(), $exportfield->exportExcepTypes);
+        })->filter( function($exportfield){
+            return count($exportfield->exportOnlyTypes) == 0 || in_array($this->getType(), $exportfield->exportOnlyTypes);
         });
     }
 

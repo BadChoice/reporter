@@ -3,5 +3,5 @@
 namespace BadChoice\Reports\DataTransformers;
 
 interface TransformsRowInterface{
-    public function transformRow($key, $value, $transformData);
+    public function transformRow($field, $row, $value, $transformData);
 }

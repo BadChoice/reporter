@@ -6,12 +6,15 @@ use BadChoice\Reports\DataTransformers\ReportDataTransformer;
 
 class ExportField{
 
-    public $field;
-    protected $title;
+    public      $field;
+    protected   $title;
 
     public $shouldIgnore = false;
     public $hideMobile   = false;
     public $sortable     = false;
+
+    public $exportOnlyTypes     = [];
+    public $exportExcepTypes    = [];
 
     public $transformation;
     public $transformationData;
@@ -47,12 +50,24 @@ class ExportField{
         return $this;
     }
 
+    public function only($type){
+        if(is_array($type)) {   $this->exportOnlyTypes + $types;    }
+        else                {   $this->exportOnlyTypes[] = $type;   }
+        return $this;
+    }
+
+    public function except($type){
+        if(is_array($type)) {   $this->exportExcepTypes + $types;    }
+        else                {   $this->exportExcepTypes[] = $type;   }
+        return $this;
+    }
+
     public function getTitle(){
         return $this->title ? : $this->field;
     }
 
     public function getValue( $row ){
-        return ReportDataTransformer::transform($this->field,
+        return ReportDataTransformer::transform($row, $this->field,
                                                 data_get($row, $this->field),
                                                 $this->transformation,
                                                 $this->transformationData);

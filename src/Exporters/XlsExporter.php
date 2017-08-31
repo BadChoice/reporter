@@ -10,13 +10,13 @@ class XlsExporter extends BaseExporter {
     private $file;
     private $excel;
 
-    public function download(){
-        $this->excel->download('csv');
+    public function download($title){
+        return $this->excel->setFilename($title)->download('xlsx');
     }
 
     public function init(){
-        $name = "hello";
-        $this->file = Excel::create( auth()->user()->tenant . "-" . $name, function($excel) {
+        $name = str_random(25);
+        $this->file = Excel::create( $name, function($excel) {
             $excel->sheet('report', function($sheet) {});
         })->store('xls', false, true);
     }
@@ -50,5 +50,9 @@ class XlsExporter extends BaseExporter {
         foreach($this->getExportFields() as $field){
             $sheet->setCellValue($letter++ . $rowPointer, $field->getValue( $record ) );
         }
+    }
+
+    protected function getType(){
+        return "csv";
     }
 }

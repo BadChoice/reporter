@@ -47,4 +47,8 @@ class HtmlExporter extends BaseExporter{
         });
         $this->output .="</tbody>";
     }
+
+    protected function getType(){
+        return "html";
+    }
 }

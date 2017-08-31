@@ -3,7 +3,7 @@
 namespace BadChoice\Reports;
 
 use BadChoice\Reports\Filters\DefaultFilters;
-use BadChoice\Reports\Exporters\ExcelExporter;
+use BadChoice\Reports\Exporters\Old\ExcelExporter;
 use Carbon\Carbon;
 
 abstract class Report{
@@ -14,6 +14,8 @@ abstract class Report{
     protected $totalize         = null;
 
     protected $exporter;
+
+    protected $reportExporter  = null;
 
     public function __construct($filters = null) {
         $this->filters = $filters ? : new $this->filtersClass( request() );
@@ -50,7 +52,7 @@ abstract class Report{
     }
 
     public function getFilters( $parent_id ){
-        if($this->totalize) $this->filters->addFilter("totalize", $this->totalize);
+        if( $this->totalize ) $this->filters->addFilter("totalize", $this->totalize);
         return $this->filters;
     }
 
@@ -64,8 +66,7 @@ abstract class Report{
     }
 
     public function download($parent_id = null){
-//        if(! $this->exporter) $this->exporter = new CSVExporter();
-        if(! $this->exporter) $this->exporter = new ExcelExporter();
+        if( ! $this->exporter) $this->exporter = new ExcelExporter();
         return $this->exporter->set(
             $this->query( $parent_id ),
             $this->exportFields,
@@ -76,6 +77,12 @@ abstract class Report{
     public function getExportName(){
         $className = rtrim(collect(explode("\\",get_class($this)))->last(),"Report");
         return $className . "-" . $this->filters->filters()["start_date"] . '-' . $this->filters->filters()["end_date"];
+    }
+
+    public function export($type = 'xls'){
+        if($type == 'xls')          return (new $this->reportExporter)->toXls( $this->query(), $this->getExportName() );
+        else if($type == 'html')    return (new $this->reportExporter)->toHtml( $this->query()->paginate(50) );
+        return (new $this->reportExporter)->toCsv( $this->query(), $this->getExportName() );
     }
 
     public function getTransformations(){
