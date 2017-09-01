@@ -8,6 +8,6 @@ use Carbon\Carbon;
 class Date implements TransformsValueInterface
 {
     public function transform($value){
-        return substr(timeZoned(Carbon::parse($value)),0,10);
+        return Carbon::parse($value)->timezone(auth()->user()->timezone)->toDateString();
     }
 }
