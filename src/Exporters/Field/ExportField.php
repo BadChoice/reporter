@@ -51,13 +51,13 @@ class ExportField{
     }
 
     public function only($type){
-        if(is_array($type)) {   $this->exportOnlyTypes + $types;    }
+        if(is_array($type)) {   $this->exportOnlyTypes   = array_merge($this->exportOnlyTypes, $types);    }
         else                {   $this->exportOnlyTypes[] = $type;   }
         return $this;
     }
 
     public function except($type){
-        if(is_array($type)) {   $this->exportExcepTypes + $types;    }
+        if(is_array($type)) {   $this->exportExcepTypes   = array_merge($this->exportExcepTypes, $types);    }
         else                {   $this->exportExcepTypes[] = $type;   }
         return $this;
     }
