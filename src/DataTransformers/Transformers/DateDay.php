@@ -8,7 +8,6 @@ use Carbon\Carbon;
 class DateDay implements TransformsValueInterface
 {
     public function transform($value){
-        $value = is_string($value) ? Carbon::parse($value) : $value;
-        return $value->timezone( auth()->user()->timezone )->day;
+        return Carbon::parse($value)->timezone( auth()->user()->timezone )->day;
     }
 }

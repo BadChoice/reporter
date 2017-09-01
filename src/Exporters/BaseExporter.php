@@ -30,7 +30,7 @@ abstract class BaseExporter{
 
     protected function getExportFields(){
         return $this->fields->reject(function($exportfield) {
-            return $exportfield->shouldIgnore || in_array($this->getType(), $exportfield->exportExcepTypes);
+            return $exportfield->shouldIgnore || in_array($this->getType(), $exportfield->exportExceptTypes);
         })->filter( function($exportfield){
             return count($exportfield->exportOnlyTypes) == 0 || in_array($this->getType(), $exportfield->exportOnlyTypes);
         });
