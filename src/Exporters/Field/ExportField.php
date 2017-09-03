@@ -14,7 +14,7 @@ class ExportField{
     public $sortable     = false;
 
     public $exportOnlyTypes     = [];
-    public $exportExcepTypes    = [];
+    public $exportExceptTypes    = [];
 
     public $transformation;
     public $transformationData;
@@ -51,14 +51,14 @@ class ExportField{
     }
 
     public function only($type){
-        if(is_array($type)) {   $this->exportOnlyTypes   = array_merge($this->exportOnlyTypes, $types);    }
+        if(is_array($type)) {   $this->exportOnlyTypes = array_merge($this->exportOnlyTypes, $type);    }
         else                {   $this->exportOnlyTypes[] = $type;   }
         return $this;
     }
 
     public function except($type){
-        if(is_array($type)) {   $this->exportExcepTypes   = array_merge($this->exportExcepTypes, $types);    }
-        else                {   $this->exportExcepTypes[] = $type;   }
+        if(is_array($type)) {   $this->exportExceptTypes = array_merge($this->exportExceptTypes + $type);    }
+        else                {   $this->exportExceptTypes[] = $type;   }
         return $this;
     }
 

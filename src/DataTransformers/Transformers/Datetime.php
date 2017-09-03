@@ -8,7 +8,6 @@ use Carbon\Carbon;
 class Datetime implements TransformsValueInterface
 {
     public function transform($value){
-        $value = is_string($value) ? Carbon::parse($value) : $value;
-        return timeZoned($value);
+        return timeZoned(Carbon::parse($value));
     }
 }
