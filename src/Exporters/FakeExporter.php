@@ -43,21 +43,21 @@ class FakeExporter extends BaseExporter{
 
     public function assertHasHeaders($titles){
         if( is_string($titles) ){
-            PHPUnit_Framework_Assert::assertContains($titles, $this->headers);
+            PHPUnit_Framework_Assert::assertContains( strtolower($titles), strtolower($this->headers), "The header doesn't contains {$titles}" );
             return;
         }
         collect($titles)->each(function($title){
-            PHPUnit_Framework_Assert::assertContains($title, $this->headers);
+            PHPUnit_Framework_Assert::assertContains( strtolower($title), strtolower($this->headers), "The header doesn't contains {$title}" );
         });
     }
 
     public function assertDoesNotHaveHeaders($titles){
         if( is_string($titles) ){
-            PHPUnit_Framework_Assert::assertNotContains($titles, $this->headers);
+            PHPUnit_Framework_Assert::assertNotContains( strtolower($titles), strtolower($this->headers), "The header contains {$titles}" );
             return;
         }
         collect($titles)->each(function($title){
-            PHPUnit_Framework_Assert::assertNotContains($title, $this->headers);
+            PHPUnit_Framework_Assert::assertNotContains( strtolower($title), strtolower($this->headers), "The header contains {$title}" );
         });
     }
 
