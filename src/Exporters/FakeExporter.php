@@ -5,9 +5,13 @@ use PHPUnit_Framework_Assert;
 
 class FakeExporter extends BaseExporter{
 
-    public $fakeType = 'fake';
     public $headers;
     public $rows;
+    static $export_type = 'csv';
+
+    public static function setExportType($exportType){
+        static::$export_type = $exportType;
+    }
 
     protected function init()       {    }
     protected function finalize()   {    }
@@ -19,7 +23,7 @@ class FakeExporter extends BaseExporter{
 
 
     protected function getType() {
-        return $this->fakeType;
+        return static::$export_type;
     }
 
     protected function generateHeader() {
@@ -37,7 +41,7 @@ class FakeExporter extends BaseExporter{
         });
     }
 
-    public function assertHeadersHas($titles){
+    public function assertHasHeaders($titles){
         if( is_string($titles) ){
             PHPUnit_Framework_Assert::assertContains($titles, $this->headers);
             return;
@@ -47,7 +51,21 @@ class FakeExporter extends BaseExporter{
         });
     }
 
+    public function assertDoesNotHaveHeaders($titles){
+        if( is_string($titles) ){
+            PHPUnit_Framework_Assert::assertNotContains($titles, $this->headers);
+            return;
+        }
+        collect($titles)->each(function($title){
+            PHPUnit_Framework_Assert::assertNotContains($title, $this->headers);
+        });
+    }
+
     public function assertRowIs($rowNumber, $key, $value){
         PHPUnit_Framework_Assert::assertEquals($value, $this->rows[$rowNumber][$key]);
+    }
+
+    public function assertRowsCount($count){
+        PHPUnit_Framework_Assert::assertCount($count, $this->rows);
     }
 }
