@@ -2,6 +2,7 @@
 
 namespace BadChoice\Reports;
 
+use BadChoice\Reports\Exporters\FakeExporter;
 use BadChoice\Reports\Exporters\HtmlExporter;
 use BadChoice\Reports\Exporters\CsvExporter;
 use BadChoice\Reports\Exporters\XlsExporter;
@@ -26,6 +27,10 @@ abstract class ReportExporter{
 
     public function toCsv($collection, $title = "export"){
         return (new CsvExporter($this->fields, $collection))->export()->download($title);
+    }
+
+    public function toFake($collection){
+        return (new FakeExporter($this->fields, $collection))->export();
     }
 
     protected abstract function getFields();
