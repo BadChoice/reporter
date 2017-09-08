@@ -8,8 +8,8 @@ class LinkId implements TransformsRowInterface {
 
     public function transformRow($field, $row, $value, $transformData){
         if( is_array($transformData) ){
-            $class = isset($transformData['class']) ? $transformData['class'] : "";
-            $text  = isset($transformData['text']) ??  $value;
+            $class = $transformData['class'] ?? "";
+            $text  = $transformData['text']  ?? $value;
             $link  = str_replace("{id}", $row['id'], $transformData['url']);
             if( isset($transformData['icon']) ){
                 return "<a class='{$class}' href='". url($link)."' style='font-size:15px'> ". icon($row['icon']) . "</a>";
