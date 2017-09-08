@@ -27,6 +27,18 @@ abstract class Report{
      */
     public abstract function query($parent_id = null);
 
+    public function get($parent_id = null){
+        return $this->query($parent_id)->get();
+    }
+
+    public function paginate($count, $parent_id = null){
+        return $this->query($parent_id)->paginate($count);
+    }
+
+    public function chunk($count, $callback, $parent_id = null){
+        return $this->query($parent_id)->chunk($count, $callback);
+    }
+
     public function totalize($key = 'all'){
         $this->totalize = $key;
         return $this;
