@@ -2,10 +2,7 @@
 
 namespace BadChoice\Reports\Filters;
 
-use BadChoice\Reports\Filters\QueryFilters;
-
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class DefaultFilters extends QueryFilters {
 

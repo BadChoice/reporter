@@ -3,6 +3,7 @@
 namespace BadChoice\Reports\Filters;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 trait DateFiltersTrait{
 
@@ -28,17 +29,17 @@ trait DateFiltersTrait{
     public function dayofweek($dayofweek = null){
         if( ! $this->dateField) return $this->builder;
         if ($dayofweek != null && $dayofweek > 0 && $dayofweek < 8) {
-            return $this->builder->where(DB::raw('dayofweek(' . $this->dateField . ')'), '=', $dayofweek);
+            return $this->builder->where(DB::raw("dayofweek({$this->dateField})"), '=', $dayofweek);
         }
     }
 
     public function start_time($time = "00:00"){
         if( ! $this->dateField) return $this->builder;
-        return $this->builder->whereRaw("TIME(DATE_ADD(" . $this->dateField . ", INTERVAL " . $this->offsetHours . " HOUR)) > '" . $time . "'");
+        return $this->builder->whereRaw("TIME(DATE_ADD({$this->dateField}, INTERVAL {$this->offsetHours} HOUR)) > '{$time}'");
     }
 
     public function end_time($time = "23:59"){
         if( ! $this->dateField) return $this->builder;
-        return $this->builder->whereRaw("TIME(DATE_ADD(" . $this->dateField . ", INTERVAL " . $this->offsetHours . " HOUR)) < '" . $time . "'");
+        return $this->builder->whereRaw("TIME(DATE_ADD({$this->dateField}, INTERVAL {$this->offsetHours} HOUR)) < '{$time}'");
     }
 }
