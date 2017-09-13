@@ -2,6 +2,8 @@
 
 namespace BadChoice\Reports\Exporters;
 
+use BadChoice\Reports\Filters\Filters;
+
 class HtmlExporter extends BaseExporter{
     protected $output       = "";
     public    $tableClasses = "tableList striped";
@@ -24,14 +26,14 @@ class HtmlExporter extends BaseExporter{
     }
 
     protected function addHeader(){
-        $this->output .= "<thead class='sticky'><tr>";
-        foreach( $this->getExportFields() as $field){
+        $params = http_build_query(Filters::all());
+        $this->output .= $this->getExportFields()->reduce(function ($carry, $field) use ($params) {
             $classes = $field->hideMobile ? "hide-mobile" : "";
-            if($field->sortable)
-                $this->output .= "<th classes='".$classes."'><a href='?sort={$field->field}'>{$field->getTitle()}</a></th>";
-            else
-                $this->output .= "<th classes='".$classes."'>{$field->getTitle()}</th>";
-        }
+            if ( ! $field->sortable ) {
+                return $carry . "<th classes='{$classes}'>{$field->getTitle()}</th>";
+            }
+            return $carry . "<th classes='{$classes}'><a href='?sort={$field->field}&{$params}'>{$field->getTitle()}</a></th>";
+        }, "<thead class='sticky'><tr>");
         $this->output .= "</tr></thead>";
     }
 
