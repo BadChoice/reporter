@@ -6,14 +6,14 @@ use BadChoice\Reports\Filters\Filters;
 
 class HtmlExporter extends BaseExporter{
     protected $output       = "";
-    public    $tableClasses = "tableList striped";
+    public static $tableClasses = "tableList striped";
 
     public function print(){
         return $this->output;
     }
 
     protected function init(){
-        $this->output .= "<table class='".$this->tableClasses."'>";
+        $this->output .= "<table class='" . static::$tableClasses . "'>";
     }
 
     protected function finalize(){
