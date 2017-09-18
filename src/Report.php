@@ -39,6 +39,10 @@ abstract class Report{
         return $this->query($parent_id)->chunk($count, $callback);
     }
 
+    public function first($parent_id = null){
+        return $this->query($parent_id)->first();
+    }
+
     public function totalize($key = 'all'){
         $this->totalize = $key;
         return $this;
