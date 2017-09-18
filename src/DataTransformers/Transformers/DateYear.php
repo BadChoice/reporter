@@ -5,9 +5,9 @@ namespace BadChoice\Reports\DataTransformers\Transformers;
 use BadChoice\Reports\DataTransformers\TransformsValueInterface;
 use Carbon\Carbon;
 
-class DateYear implements TransformsValueInterface
-{
+class DateYear implements TransformsValueInterface {
     public function transform($value){
-        return Carbon::parse($value)->timezone( auth()->user()->timezone )->year;
+        if ( ! $value ) return "--";
+        return Carbon::parse( $value )->timezone( auth()->user()->timezone )->year;
     }
 }

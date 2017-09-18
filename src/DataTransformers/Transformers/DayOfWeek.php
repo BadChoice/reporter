@@ -7,9 +7,10 @@ use Carbon\Carbon;
 
 class DayOfWeek implements TransformsValueInterface {
 
-    public function transform($value) {
+    public function transform( $value ) {
+        if ( ! $value ) return "--";
         if( ! is_integer( $value ) ) {
-            $value = Carbon::parse($value)->timezone( auth()->user()->timezone )->dayOfWeek;
+            $value = Carbon::parse( $value )->timezone( auth()->user()->timezone )->dayOfWeek;
         }
         return dayOfWeekName( $value );
     }
