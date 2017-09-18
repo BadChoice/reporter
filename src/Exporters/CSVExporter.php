@@ -2,8 +2,6 @@
 
 namespace BadChoice\Reports\Exporters;
 
-use BadChoice\Reports\Exporters\BaseExporter2;
-use Maatwebsite\Excel\Facades\Excel;
 use Response;
 
 class CsvExporter extends BaseExporter {
