@@ -25,6 +25,11 @@ class Filters{
         return static::$singleton->get();
     }
 
+    public static function addFilter($key, $value){
+        if( ! static::$singleton) static::$singleton = new Filters;
+        static::$singleton->add($key, $value);
+    }
+
     public static function find($key){
         return static::all()[$key] ?? null;
     }
