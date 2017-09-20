@@ -94,7 +94,7 @@ abstract class Report{
     public function export($type = 'xls'){
         if($type == 'xls')          return (new $this->reportExporter)->toXls( $this->query(), $this->getExportName() );
         else if($type == 'html')    return (new $this->reportExporter)->toHtml( $this->query()->paginate(50) );
-        else if($type == 'fake')    return (new $this->reportExporter)->toFake( $this->query()->get() );
+        else if($type == 'fake')    return (new $this->reportExporter($this->getFilters(null)))->toFake( $this->query()->get() );
         return (new $this->reportExporter)->toCsv( $this->query(), $this->getExportName() );
     }
 
