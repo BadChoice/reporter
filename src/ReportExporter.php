@@ -12,9 +12,20 @@ use BadChoice\Reports\Filters\Filters;
 abstract class ReportExporter{
 
     public $fields;
+    protected $filters;
 
-    public function __construct(){
+    public function __construct($filters = null){
+        $this->setFilters($filters);
         $this->fields = $this->getFields();
+    }
+
+    public function setFilters($filters){
+        $this->filters = $filters;
+        return $this;
+    }
+
+    public function getFilter($key){
+        return $this->filters->filters()[$key] ?? Filters::find($key);
     }
 
     public function toHtml($collection){
