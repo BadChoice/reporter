@@ -25,7 +25,9 @@ abstract class ReportExporter{
     }
 
     public function getFilter($key){
-        return $this->filters->filters()[$key] ?? Filters::find($key);
+        if ( ! $this->filters || ! isset($this->filters->filters()[$key]))
+            return Filters::find($key);
+        return $this->filters->filters()[$key];
     }
 
     public function toHtml($collection){
