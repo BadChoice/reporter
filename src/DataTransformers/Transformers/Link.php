@@ -7,18 +7,21 @@ use BadChoice\Reports\DataTransformers\TransformsRowInterface;
 class Link implements TransformsRowInterface {
 
     public function transformRow($field, $row, $value, $transformData) {
-        if( is_array($transformData) ) {
+        $class = "";
+        $text  = $value;
+        $link  = str_replace("{" . $field . "}", $value, $transformData);
+        if ( is_array($transformData) ) {
             $class = $transformData['class'] ?? "";
             $text  = $transformData['text'] ?? $value;
-            $link  = str_replace("{".$field."}", $value, $transformData['url']);
-            if( isset($transformData['icon']) ) {
-                return "<a class='{$class}' href='". url($link)."' style='font-size:15px'> ". icon($row['icon']) . "</a>";
+            if ( isset( $transformData["customId"] ) ) {
+                $field = $transformData["customId"] ;
+                $value = $row[$transformData["customId"]];
             }
-        } else {
-            $class = "";
-            $text  = $value;
-            $link  = str_replace("{".$field."}", $value, $transformData);
+            $link  = str_replace("{" . $field . "}", $value, $transformData['url']);
+            if ( isset($transformData['icon']) ) {
+                return "<a class='{$class}' href='" . url($link) . "' style='font-size:15px'> " . icon($transformData['icon']) . "</a>";
+            }
         }
-        return link_to($link, $text, ["class" => $class] );
+        return link_to($link, $text, compact("class") );
     }
 }
