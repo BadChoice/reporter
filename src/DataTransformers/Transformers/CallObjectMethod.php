@@ -4,9 +4,10 @@ namespace BadChoice\Reports\DataTransformers\Transformers;
 
 use BadChoice\Reports\DataTransformers\TransformsRowInterface;
 
-class Callback implements TransformsRowInterface {
+class CallObjectMethod implements TransformsRowInterface {
 
     public function transformRow($field, $row, $value, $transformData){
-        return $transformData($value);
+        $callback = $transformData;
+        return $row->$callback();
     }
 }
