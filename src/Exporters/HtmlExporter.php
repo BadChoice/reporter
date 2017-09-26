@@ -4,28 +4,28 @@ namespace BadChoice\Reports\Exporters;
 
 use BadChoice\Reports\Filters\Filters;
 
-class HtmlExporter extends BaseExporter{
+class HtmlExporter extends BaseExporter {
     protected $output       = "";
     public static $tableClasses = "tableList striped";
 
-    public function print(){
+    public function print() {
         return $this->output;
     }
 
-    protected function init(){
+    protected function init() {
         $this->output .= "<table class='" . static::$tableClasses . "'>";
     }
 
-    protected function finalize(){
+    protected function finalize() {
         $this->output .="</table>";
     }
 
-    protected function generate(){
+    protected function generate() {
         $this->addHeader();
         $this->addBody();
     }
 
-    protected function addHeader(){
+    protected function addHeader() {
         $params = http_build_query(Filters::all());
         $this->output .= $this->getExportFields()->reduce(function ($carry, $field) use ($params) {
             $classes = $field->hideMobile ? "hide-mobile" : "";
@@ -37,11 +37,11 @@ class HtmlExporter extends BaseExporter{
         $this->output .= "</tr></thead>";
     }
 
-    protected function addBody(){
+    protected function addBody() {
         $this->output .="<tbody>";
-        $this->forEachRecord(function($row){
+        $this->forEachRecord(function($row) {
             $this->output .= "<tr>";
-            foreach($this->getExportFields() as $field){
+            foreach ($this->getExportFields() as $field) {
                 $classes = $field->hideMobile ? "hide-mobile" : "";
                 $this->output .= "<td class='".$classes."'>{$field->getValue($row)}</td>";
             }
@@ -50,7 +50,7 @@ class HtmlExporter extends BaseExporter{
         $this->output .="</tbody>";
     }
 
-    protected function getType(){
+    protected function getType() {
         return "html";
     }
 }

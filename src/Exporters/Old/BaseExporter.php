@@ -2,9 +2,7 @@
 
 namespace BadChoice\Reports\Exporters\Old;
 
-class BaseExporter
-{
-
+class BaseExporter {
     public $fields;
     public $transformations;
     public $query;
@@ -67,7 +65,9 @@ class BaseExporter
         } else {
             $value = $row;
             foreach ($fields as $field) {
-                if ($value == null) return "-";
+                if ($value == null) {
+                    return "-";
+                }
                 if (is_array($value)) {
                     $value = ($value[$field]) ? $value[$field] : null;
                 } else {
@@ -86,7 +86,10 @@ class BaseExporter
     }
 
     static function commaNumber($number, $decimals = true) {
-        if ($decimals) return number_format($number, 2, ',', '.');
-        else           return number_format($number, 0, ',', '.');
+        if ($decimals) {
+            return number_format($number, 2, ',', '.');
+        } else {
+            return number_format($number, 0, ',', '.');
+        }
     }
 }
