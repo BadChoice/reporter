@@ -6,9 +6,10 @@ use BadChoice\Reports\DataTransformers\TransformsValueInterface;
 use Carbon\Carbon;
 
 class Datetime implements TransformsValueInterface {
-
     public function transform( $value ) {
-        if ( ! $value ) return "--";
+        if ( ! $value ) {
+            return "--";
+        }
         return timeZoned( Carbon::parse( $value ) );
     }
 }

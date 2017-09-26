@@ -9,40 +9,39 @@ use BadChoice\Reports\Exporters\XlsExporter;
 use BadChoice\Reports\Exporters\Field\ExportField;
 use BadChoice\Reports\Filters\Filters;
 
-abstract class ReportExporter{
-
+abstract class ReportExporter {
     public $fields;
     protected $filters;
 
-    public function __construct($filters = null){
+    public function __construct($filters = null) {
         $this->setFilters($filters);
         $this->fields = $this->getFields();
     }
 
-    public function setFilters($filters){
+    public function setFilters($filters) {
         $this->filters = $filters;
         return $this;
     }
 
-    public function getFilter($key){
+    public function getFilter($key) {
         if ( ! $this->filters || ! isset($this->filters->filters()[$key]))
             return Filters::find($key);
         return $this->filters->filters()[$key];
     }
 
-    public function toHtml($collection){
+    public function toHtml($collection) {
         return (new HtmlExporter($this->fields, $collection))->export()->print();
     }
 
-    public function toXls($collection, $title = "export"){
+    public function toXls($collection, $title = "export") {
         return (new XlsExporter($this->fields, $collection))->export()->download($title);
     }
 
-    public function toCsv($collection, $title = "export"){
+    public function toCsv($collection, $title = "export") {
         return (new CsvExporter($this->fields, $collection))->export()->download($title);
     }
 
-    public function toFake($collection){
+    public function toFake($collection) {
         return (new FakeExporter($this->fields, $collection))->export();
     }
 

@@ -4,8 +4,7 @@ namespace BadChoice\Reports\Exporters;
 
 use Illuminate\Database\Query\Builder;
 
-abstract class BaseExporter{
-
+abstract class BaseExporter {
     protected $fields;
     protected $collection;
     protected $query;
@@ -15,38 +14,42 @@ abstract class BaseExporter{
     protected abstract function finalize();
     protected abstract function getType();
 
-    public function __construct($fields, $collection){
+    public function __construct($fields, $collection) {
         $this->fields       = collect($fields);
-        if($collection instanceof Builder)  $this->query = $collection;
-        else                                $this->collection = $collection;
+        if ($collection instanceof Builder) {
+            $this->query = $collection;
+        } else {
+            $this->collection = $collection;
+        }
     }
 
-    public function export(){
+    public function export() {
         $this->init         ();
         $this->generate     ();
         $this->finalize     ();
         return $this;
     }
 
-    protected function getExportFields(){
+    protected function getExportFields() {
         return $this->fields->reject(function($exportfield) {
             return $exportfield->shouldIgnore || in_array($this->getType(), $exportfield->exportExceptTypes);
-        })->filter( function($exportfield){
+        })->filter( function($exportfield) {
             return count($exportfield->exportOnlyTypes) == 0 || in_array($this->getType(), $exportfield->exportOnlyTypes);
         });
     }
 
-    protected function forEachRecord($callback){
-        if($this->collection) return $this->foreachCollectionItem($this->collection, $callback);
-        $this->query->chunk(200, function($collection) use($callback){
+    protected function forEachRecord($callback) {
+        if ($this->collection) {
+            return $this->foreachCollectionItem($this->collection, $callback);
+        }
+        $this->query->chunk(200, function($collection) use ($callback) {
             $this->foreachCollectionItem($collection, $callback);
         });
     }
 
-    private function foreachCollectionItem($collection,$callback){
-        $collection->each(function($row) use($callback){
-           $callback($row);
+    private function foreachCollectionItem($collection,$callback) {
+        $collection->each(function($row) use ($callback) {
+            $callback($row);
         });
     }
-
 }
