@@ -9,18 +9,17 @@ class Link implements TransformsRowInterface {
         $class = "";
         $text  = $value;
         $link  = str_replace("{" . $field . "}", $value, $transformData);
-        if ( is_array($transformData) ) {
+        if( is_array($transformData) ) {
             $class = $transformData['class'] ?? "";
-            $text  = $transformData['text'] ?? $value;
+            $text  = ($transformData['content'] ?? "") . ($transformData['text'] ?? $value);
             if ( isset( $transformData["customId"] ) ) {
                 $field = $transformData["customId"] ;
                 $value = $row[$transformData["customId"]];
             }
-            $link  = str_replace("{" . $field . "}", $value, $transformData['url']);
+            $link = str_replace("{" . $field . "}", $value, $transformData['url']);
             if ( isset($transformData['icon']) ) {
                 return "<a class='{$class}' href='" . url($link) . "' style='font-size:15px'> " . icon($transformData['icon']) . "</a>";
             }
         }
-        return link_to($link, $text, compact("class") );
     }
 }
