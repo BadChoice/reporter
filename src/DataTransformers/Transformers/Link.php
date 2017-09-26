@@ -22,5 +22,6 @@ class Link implements TransformsRowInterface {
                 return "<a class='{$class}' href='" . url($link) . "' style='font-size:15px'> " . icon($transformData['icon']) . "</a>";
             }
         }
+        return link_to($link, $text, compact("class"));
     }
 }
