@@ -44,7 +44,7 @@ class Filters{
     }
 
     public function get(){
-        if(! $this->allFilters) $this->findFiltersWithSession();
+        /*if(! $this->allFilters)*/ $this->findFiltersWithSession();
         return $this->allFilters;
     }
 
