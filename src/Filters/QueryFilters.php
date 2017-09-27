@@ -4,8 +4,7 @@ namespace BadChoice\Reports\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 
-abstract class QueryFilters{
-
+abstract class QueryFilters {
     protected $builder;
     private   $filters;
 
@@ -31,14 +30,22 @@ abstract class QueryFilters{
      */
     public function applyFromArray(Builder $builder, array $filters, $totals = false) {
         $this->builder = $builder;
-        if( method_exists($this,'globalFilter') ){
+        if ( method_exists($this,'globalFilter') ) {
             $this->globalFilter();
         }
         foreach ($filters as $name => $value) {
-            if (! method_exists($this, $name))  {  continue;                }
-            if ($totals && $name == 'totalize') {  $this->$name('all');     }
-            else if (strlen($value))            {  $this->$name($value);    }
-            else                                {  $this->$name();           }
+            if (! method_exists($this, $name)) {
+                continue;
+            }
+            if ($totals && $name == 'totalize') {
+                $this->$name('all');
+            } else {
+                if (strlen($value)) {
+                    $this->$name($value);
+                } else {
+                    $this->$name();
+                }
+            }
         }
         return $this->builder;
     }
@@ -60,7 +67,7 @@ abstract class QueryFilters{
         return $this;
     }
 
-    public function with($filter, $value = null){
+    public function with($filter, $value = null) {
         return $this->addFilter($filter, $value);
     }
 

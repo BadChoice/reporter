@@ -2,6 +2,6 @@
 
 namespace BadChoice\Reports\DataTransformers;
 
-interface TransformsValueInterface{
+interface TransformsValueInterface {
     public function transform($value);
 }

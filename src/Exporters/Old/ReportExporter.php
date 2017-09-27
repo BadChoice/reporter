@@ -2,6 +2,6 @@
 
 namespace BadChoice\Reports\Exporters\Old;
 
-interface ReportExporter{
+interface ReportExporter {
     public function download( $name );
 }

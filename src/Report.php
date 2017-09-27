@@ -6,8 +6,7 @@ use BadChoice\Reports\Filters\DefaultFilters;
 use BadChoice\Reports\Exporters\Old\ExcelExporter;
 use Carbon\Carbon;
 
-abstract class Report{
-
+abstract class Report {
     protected $filtersClass     = DefaultFilters::class;
     protected $exportColumns    = [];
     protected $exportTitles     = [];
@@ -27,28 +26,28 @@ abstract class Report{
      */
     public abstract function query($parent_id = null);
 
-    public function get($parent_id = null){
+    public function get($parent_id = null) {
         return $this->query($parent_id)->get();
     }
 
-    public function paginate($count, $parent_id = null){
+    public function paginate($count, $parent_id = null) {
         return $this->query($parent_id)->paginate($count);
     }
 
-    public function chunk($count, $callback, $parent_id = null){
+    public function chunk($count, $callback, $parent_id = null) {
         return $this->query($parent_id)->chunk($count, $callback);
     }
 
-    public function first($parent_id = null){
+    public function first($parent_id = null) {
         return $this->query($parent_id)->first();
     }
 
-    public function totalize($key = 'all'){
+    public function totalize($key = 'all') {
         $this->totalize = $key;
         return $this;
     }
 
-    public function addFilter($key, $value = null){
+    public function addFilter($key, $value = null) {
         $this->filters->addFilter($key, $value);
         return $this;
     }
@@ -58,17 +57,23 @@ abstract class Report{
      * @param string null $end
      * @return $this
      */
-    public function forDates($start, $end = null){
-        if($start instanceof Carbon)        $start = $start->toDateString();
-        if($end && $end instanceof Carbon)  $end = $end->toDateString();
+    public function forDates($start, $end = null) {
+        if ($start instanceof Carbon) {
+            $start = $start->toDateString();
+        }
+        if ($end && $end instanceof Carbon) {
+            $end = $end->toDateString();
+        }
 
         $this->filters->addFilter("start_date", $start);
         $this->filters->addFilter("end_date", $end ? : Carbon::parse($start)->addDay()->toDateString() );
         return $this;
     }
 
-    public function getFilters( $parent_id = null ){
-        if( $this->totalize ) $this->filters->addFilter("totalize", $this->totalize);
+    public function getFilters( $parent_id = null ) {
+        if ( $this->totalize ) {
+            $this->filters->addFilter("totalize", $this->totalize);
+        }
         return $this->filters;
     }
 
@@ -80,13 +85,15 @@ abstract class Report{
      * @param $exporter ReportExporter
      * @return $this
      */
-    public function setExporter($exporter){
+    public function setExporter($exporter) {
         $this->exporter = $exporter;
         return $this;
     }
 
-    public function download($parent_id = null){
-        if( ! $this->exporter) $this->exporter = new ExcelExporter();
+    public function download($parent_id = null) {
+        if ( ! $this->exporter) {
+            $this->exporter = new ExcelExporter();
+        }
         return $this->exporter->set(
             $this->query( $parent_id ),
             $this->exportFields,
@@ -94,23 +101,23 @@ abstract class Report{
             ->download( $this->getExportName() );
     }
 
-    public function getExportName(){
+    public function getExportName() {
         $className = rtrim(collect(explode("\\",get_class($this)))->last(),"Report");
         return $className . "-" . $this->filters->filters()["start_date"] . '-' . $this->filters->filters()["end_date"];
     }
 
-    public function export($type = 'xls'){
+    public function export($type = 'xls') {
         if($type == 'xls')          return (new $this->reportExporter)->toXls( $this->query(), $this->getExportName() );
         else if($type == 'html')    return (new $this->reportExporter)->toHtml( $this->query()->paginate(50) );
         else if($type == 'fake')    return (new $this->reportExporter($this->getFilters()))->toFake( $this->query()->get() );
         return (new $this->reportExporter)->toCsv( $this->query(), $this->getExportName() );
     }
 
-    public function getTransformations(){
+    public function getTransformations() {
         return [];
     }
 
-    protected function getTransformDates(){
+    protected function getTransformDates() {
         return [
             "created_at"    => function($value){ return $this->datetimeTransform($value);},
             "opened"        => function($value){ return $this->datetimeTransform($value);},
@@ -121,7 +128,7 @@ abstract class Report{
         ];
     }
 
-    private function datetimeTransform($value){
+    private function datetimeTransform($value) {
         return Carbon::parse($value)->timezone( auth()->user()->timezone)->toDatetimeString();
     }
 }
