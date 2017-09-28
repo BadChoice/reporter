@@ -2,8 +2,9 @@
 
 namespace BadChoice\Reports\Filters;
 
-class Filters {
-    static $singleton;
+class Filters
+{
+    public static $singleton;
 
     protected $filters = [];
 
@@ -19,37 +20,43 @@ class Filters {
         "end_date"
     ];
 
-    public static function all() {
-        if ( ! static::$singleton) {
+    public static function all()
+    {
+        if (! static::$singleton) {
             static::$singleton = new Filters;
         }
         return static::$singleton->get();
     }
 
-    public static function find($key) {
+    public static function find($key)
+    {
         return static::all()[$key] ?? null;
     }
 
-    public function findFiltersWithSession() {
+    public function findFiltersWithSession()
+    {
         $request        = request();
         $sessionFilters = session('filters') ?? [];
         $filters        = $request ?  : [];
-        $filters        = array_merge( $sessionFilters, $request->all() );
+        $filters        = array_merge($sessionFilters, $request->all());
         session(['filters' => array_only($filters, $this->filtersToKeepInSession)]);
-        $this->allFilters = array_merge( $filters, $this->extraFilters );
+        $this->allFilters = array_merge($filters, $this->extraFilters);
     }
 
-    public function add($filter,$value) {
+    public function add($filter, $value)
+    {
         $this->extraFilters[$filter] = $value;
         return $this;
     }
 
-    public function get() {
+    public function get()
+    {
         $this->findFiltersWithSession();
         return $this->allFilters;
     }
 
-    public function clear() {
+    public function clear()
+    {
         session()->forget('filters');
         return $this;
     }

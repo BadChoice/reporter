@@ -4,12 +4,13 @@ namespace BadChoice\Reports\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 
-abstract class QueryFilters {
+abstract class QueryFilters
+{
     protected $builder;
-    private   $filters;
+    private $filters;
 
-
-    public function __construct() {
+    public function __construct()
+    {
         $this->filters = new Filters;
     }
 
@@ -18,8 +19,9 @@ abstract class QueryFilters {
      * @param  boolean $totals set it to true to totalize without grouping
      * @return Builder
      */
-    public function apply(Builder $builder, $totals = false) {
-        return $this->applyFromArray($builder, $this->filters() ,$totals);
+    public function apply(Builder $builder, $totals = false)
+    {
+        return $this->applyFromArray($builder, $this->filters(), $totals);
     }
 
     /**
@@ -28,9 +30,10 @@ abstract class QueryFilters {
      * @param  boolean $totals set it to true to totalize without grouping
      * @return Builder
      */
-    public function applyFromArray(Builder $builder, array $filters, $totals = false) {
+    public function applyFromArray(Builder $builder, array $filters, $totals = false)
+    {
         $this->builder = $builder;
-        if ( method_exists($this,'globalFilter') ) {
+        if (method_exists($this, 'globalFilter')) {
             $this->globalFilter();
         }
         foreach ($filters as $name => $value) {
@@ -54,20 +57,24 @@ abstract class QueryFilters {
      * Get all session & request filters data (saves them all to session['filters']
      * @return array
      */
-    public function filters() {
-        return $this->addDefaultFilters( $this->filters->get() );
+    public function filters()
+    {
+        return $this->addDefaultFilters($this->filters->get());
     }
 
-    public function clearFilters() {
+    public function clearFilters()
+    {
         $filters->clear();
     }
 
-    public function addFilter($filter, $value = null) {
+    public function addFilter($filter, $value = null)
+    {
         $this->filters->add($filter, $value);
         return $this;
     }
 
-    public function with($filter, $value = null) {
+    public function with($filter, $value = null)
+    {
         return $this->addFilter($filter, $value);
     }
 

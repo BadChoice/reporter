@@ -4,7 +4,8 @@ namespace BadChoice\Reports\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 
-trait Filterable {
+trait Filterable
+{
     /**
      * Filter a result set with request variables
      *
@@ -13,8 +14,9 @@ trait Filterable {
      * @param  boolean $totals set it to true to totalize without grouping*
      * @return Builder
      */
-    public function scopeFilter($query, QueryFilters $filters, $totals = false) {
-        return $filters->apply($query,$totals);
+    public function scopeFilter($query, QueryFilters $filters, $totals = false)
+    {
+        return $filters->apply($query, $totals);
     }
 
     /**
@@ -25,7 +27,8 @@ trait Filterable {
      * @param  boolean $totals set it to true to totalize without grouping
      * @return mixed
      */
-    public function scopeFilterArray($query, QueryFilters $filters, array $filtersArray, $totals = false) {
-        return $filters->applyFromArray($query,$filtersArray,$totals);
+    public function scopeFilterArray($query, QueryFilters $filters, array $filtersArray, $totals = false)
+    {
+        return $filters->applyFromArray($query, $filtersArray, $totals);
     }
 }

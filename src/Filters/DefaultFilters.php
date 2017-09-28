@@ -4,7 +4,8 @@ namespace BadChoice\Reports\Filters;
 
 use Carbon\Carbon;
 
-class DefaultFilters extends QueryFilters {
+class DefaultFilters extends QueryFilters
+{
     use DateFiltersTrait;
 
     /*
@@ -66,17 +67,20 @@ class DefaultFilters extends QueryFilters {
      * OrderFilters constructor.
      * @param null $request
      */
-    public function __construct($request = null) {
+    public function __construct($request = null)
+    {
         parent::__construct($request);
         $this->openingTime = $this->getOpeningTime();
-        $this->offsetHours = Carbon::now( auth()->user()->timezone )->offsetHours;
+        $this->offsetHours = Carbon::now(auth()->user()->timezone)->offsetHours;
     }
 
-    public function getOpeningTime() {
+    public function getOpeningTime()
+    {
         return "00:00:00";
     }
 
     //====================================================================
+
     /**
      * Sorts the result by the key and order
      *
@@ -84,10 +88,11 @@ class DefaultFilters extends QueryFilters {
      * @param string $order
      * @return mixed
      */
-    public function sort($key, $order = 'desc') {
+    public function sort($key, $order = 'desc')
+    {
         if ($this->validSortFields == null || count($this->validSortFields) > 0) {
             if (array_key_exists($key, $this->validSortFields) || in_array($key, $this->validSortFields)) {
-                if (isset($this->validSortFields[$key]) ) {
+                if (isset($this->validSortFields[$key])) {
                     $order = $this->validSortFields[$key];
                 }
                 return $this->builder->orderBy($key, $order);
@@ -99,14 +104,15 @@ class DefaultFilters extends QueryFilters {
      * @param $filters
      * @return mixed
      */
-    protected function addDefaultFilters( $filters ) {
+    protected function addDefaultFilters($filters)
+    {
         if ($this->defaultSort != null) {
-            if (!array_key_exists("sort",$filters) || $filters['sort'] == null) {
+            if (! array_key_exists("sort", $filters) || $filters['sort'] == null) {
                 $filters["sort"] = $this->defaultSort;
             }
         }
         if ($this->defaultTotalize != null) {
-            if (!array_key_exists("totalize",$filters) || $filters['totalize'] == null) {
+            if (! array_key_exists("totalize", $filters) || $filters['totalize'] == null) {
                 $filters["totalize"] = $this->defaultTotalize;
             }
         }
@@ -119,21 +125,24 @@ class DefaultFilters extends QueryFilters {
      * @param $value
      * @return $this
      */
-    protected function where($key, $value) {
+    protected function where($key, $value)
+    {
         $key = $this->composedKey($key);
-        return $this->builder->where($key,$value);
+        return $this->builder->where($key, $value);
     }
 
-    private function composedKey($key) {
+    private function composedKey($key)
+    {
         if ($this->table != null) {
             $key = $this->table .'.'.$key;
         }
         return $key;
     }
 
-    protected function hasJoin($table) {
+    protected function hasJoin($table)
+    {
         $joins = $this->builder->getQuery()->joins;
-        if ( ! $joins ) {
+        if (! $joins) {
             return false;
         }
         return in_array($table, $joins);
