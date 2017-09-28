@@ -4,32 +4,38 @@ namespace BadChoice\Reports\Exporters;
 
 use BadChoice\Reports\Filters\Filters;
 
-class HtmlExporter extends BaseExporter {
-    protected $output       = "";
+class HtmlExporter extends BaseExporter
+{
+    protected $output           = "";
     public static $tableClasses = "tableList striped";
 
-    public function print() {
+    public function print()
+    {
         return $this->output;
     }
 
-    protected function init() {
+    protected function init()
+    {
         $this->output .= "<table class='" . static::$tableClasses . "'>";
     }
 
-    protected function finalize() {
-        $this->output .="</table>";
+    protected function finalize()
+    {
+        $this->output .= "</table>";
     }
 
-    protected function generate() {
+    protected function generate()
+    {
         $this->addHeader();
         $this->addBody();
     }
 
-    protected function addHeader() {
+    protected function addHeader()
+    {
         $params = http_build_query(Filters::all());
         $this->output .= $this->getExportFields()->reduce(function ($carry, $field) use ($params) {
             $classes = $field->hideMobile ? "hide-mobile" : "";
-            if ( ! $field->sortable ) {
+            if (! $field->sortable) {
                 return $carry . "<th classes='{$classes}'>{$field->getTitle()}</th>";
             }
             return $carry . "<th classes='{$classes}'><a href='?sort={$field->field}&{$params}'>{$field->getTitle()}</a></th>";
@@ -37,9 +43,10 @@ class HtmlExporter extends BaseExporter {
         $this->output .= "</tr></thead>";
     }
 
-    protected function addBody() {
-        $this->output .="<tbody>";
-        $this->forEachRecord(function($row) {
+    protected function addBody()
+    {
+        $this->output .= "<tbody>";
+        $this->forEachRecord(function ($row) {
             $this->output .= "<tr>";
             foreach ($this->getExportFields() as $field) {
                 $classes = $field->hideMobile ? "hide-mobile" : "";
@@ -47,10 +54,11 @@ class HtmlExporter extends BaseExporter {
             }
             $this->output .= "</tr>";
         });
-        $this->output .="</tbody>";
+        $this->output .= "</tbody>";
     }
 
-    protected function getType() {
+    protected function getType()
+    {
         return "html";
     }
 }
