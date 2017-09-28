@@ -18,7 +18,7 @@ class Link implements TransformsRowInterface
                 return "<a class='{$class}' href='" . url($link) . "' style='font-size:15px'> " . icon($transformData['icon']) . "</a>";
             }
         }
-        return link_to($link, $text, compact("class"));
+        return "<a class='{$class}' href='" . url($link) . "' {$text}</a>";
     }
 
     /**
@@ -26,14 +26,13 @@ class Link implements TransformsRowInterface
      * @param $link
      * @return mixed
      */
-    private function parseLink($row, $link)
+    public function parseLink($row, $link)
     {
         $link    = is_array($link) ? $link['url'] : $link;
         $matches = null;
-        $result  = preg_match("/{([a-z,_,-]*)}/", $link, $matches);
-        while ($result) {
-            $link   = str_replace($matches[0], $row[$matches[1]], $link);
-            $result = preg_match("/{([a-z,_,-]*)}/", $link, $matches);
+        $results = preg_match_all("/{([a-z,A-Z,0-9,_,-]*)}/", $link, $matches);
+        foreach(range(0, $results - 1) as $i){
+            $link   = str_replace($matches[0][$i], $row[$matches[1][$i]], $link);
         }
         return $link;
     }
