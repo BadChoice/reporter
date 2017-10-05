@@ -40,8 +40,7 @@ class Link implements TransformsRowInterface
 
     protected function getDisplayText($transformData, $value)
     {
-        if (isset($transformData['textCallback']))
-        {
+        if (isset($transformData['textCallback'])) {
             return $transformData['textCallback']($value);
         }
         return ($transformData['content'] ?? "") . ($transformData['text'] ?? $value);
