@@ -13,10 +13,10 @@ class Link implements TransformsRowInterface
         $link  = $this->parseLink($row, $transformData);
         if (is_array($transformData)) {
             $class = $transformData['class'] ?? "";
-            $text  = ($transformData['content'] ?? "") . ($transformData['text'] ?? $value);
             if (isset($transformData['icon'])) {
                 return "<a class='{$class}' href='" . url($link) . "' style='font-size:15px'> " . icon($transformData['icon']) . "</a>";
             }
+            $text = $this->getDisplayText($transformData, $value);
         }
         return "<a class='{$class}' href='" . url($link) . "' {$text}</a>";
     }
@@ -35,5 +35,13 @@ class Link implements TransformsRowInterface
             $link   = str_replace($matches[0][$i], $row[$matches[1][$i]], $link);
         }
         return $link;
+    }
+
+    protected function getDisplayText($transformData, $value)
+    {
+        if (isset($transformData['textCallback'])) {
+            return $transformData['textCallback']($value);
+        }
+        return ($transformData['content'] ?? "") . ($transformData['text'] ?? $value);
     }
 }

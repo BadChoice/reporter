@@ -86,9 +86,9 @@ class ExportField
         return ReportDataTransformer::transform(
             $row,
             $this->field,
-                                                data_get($row, $this->field),
-                                                $this->transformation,
-                                                $this->transformationData
+            data_get($row, $this->field),
+            $this->transformation,
+            $this->transformationData
         );
     }
 }
