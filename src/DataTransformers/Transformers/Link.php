@@ -18,7 +18,7 @@ class Link implements TransformsRowInterface
             }
             $text = $this->getDisplayText($transformData, $value);
         }
-        return "<a class='{$class}' href='" . url($link) . "' {$text}</a>";
+        return "<a class='{$class}' href='" . url($link) . "'>{$text}</a>";
     }
 
     /**
