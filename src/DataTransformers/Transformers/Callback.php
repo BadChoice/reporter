@@ -8,6 +8,6 @@ class Callback implements TransformsRowInterface
 {
     public function transformRow($field, $row, $value, $transformData)
     {
-        return $transformData($value);
+        return $transformData($value, $row);
     }
 }
