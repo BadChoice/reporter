@@ -37,6 +37,11 @@ class ExportField
         return $this;
     }
 
+    /**
+     * @param $transformation string|array the name of the transformation or array of transformation names
+     * @param null $transformationData object the data to be applied to the transformation. Note only available when using string as transformation (not working on array)
+     * @return $this
+     */
     public function transform($transformation, $transformationData = null)
     {
         $this->transformation       = $transformation;
@@ -83,12 +88,11 @@ class ExportField
 
     public function getValue($row)
     {
-        return ReportDataTransformer::transform(
-            $row,
-            $this->field,
-            data_get($row, $this->field),
-            $this->transformation,
-            $this->transformationData
-        );
+        if(is_array($this->transformation)){
+            return collect($this->transformation)->reduce(function($value, $transformation) use($row){
+                return ReportDataTransformer::transform($row, $this->field, $value, $transformation);
+            }, data_get($row, $this->field));
+        }
+        return ReportDataTransformer::transform($row, $this->field, data_get($row,$this->field), $this->transformation, $this->transformationData);
     }
 }
