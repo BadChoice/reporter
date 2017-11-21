@@ -36,20 +36,15 @@ abstract class QueryFilters
         if (method_exists($this, 'globalFilter')) {
             $this->globalFilter();
         }
-        foreach ($filters as $name => $value) {
-            if (! method_exists($this, $name)) {
-                continue;
+        collect($filters)->filter(function($value, $name) {
+            return method_exists($this, $name);
+        })->each(function ($value, $name) use ($totals){
+            $value = $this->isTotalized($name, $totals) ? 'all' : $value;
+            if ($value && ! empty($value)) {
+                return $this->$name($value);
             }
-            if ($totals && $name == 'totalize') {
-                $this->$name('all');
-            } else {
-                if (strlen($value)) {
-                    $this->$name($value);
-                } else {
-                    $this->$name();
-                }
-            }
-        }
+            return $this->$name();
+        });
         return $this->builder;
     }
 
@@ -64,7 +59,7 @@ abstract class QueryFilters
 
     public function clearFilters()
     {
-        $filters->clear();
+        $this->filters->clear();
     }
 
     public function addFilter($filter, $value = null)
@@ -76,6 +71,10 @@ abstract class QueryFilters
     public function with($filter, $value = null)
     {
         return $this->addFilter($filter, $value);
+    }
+
+    private function isTotalized($name, $totals) {
+        return ($totals && $name == 'totalize');
     }
 
     /**
