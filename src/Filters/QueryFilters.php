@@ -36,14 +36,11 @@ abstract class QueryFilters
         if (method_exists($this, 'globalFilter')) {
             $this->globalFilter();
         }
-        collect($filters)->each(function ($value, $name) use ($totals){
-            if (! method_exists($this, $name)) {
-                return true;
-            }
-            if ($totals && $name == 'totalize') {
-                return $this->$name('all');
-            }
-            if ($value) {
+        collect($filters)->filter(function($value, $name) {
+            return method_exists($this, $name);
+        })->each(function ($value, $name) use ($totals){
+            $value = $this->isTotalized($name, $totals) ? 'all' : $value;
+            if ($value && ! empty($value)) {
                 return $this->$name($value);
             }
             return $this->$name();
@@ -74,6 +71,10 @@ abstract class QueryFilters
     public function with($filter, $value = null)
     {
         return $this->addFilter($filter, $value);
+    }
+
+    private function isTotalized($name, $totals) {
+        return ($totals && $name == 'totalize');
     }
 
     /**
