@@ -127,8 +127,11 @@ class DefaultFilters extends QueryFilters
      */
     protected function where($key, $value)
     {
-        $key = $this->composedKey($key);
-        return $this->builder->where($key, $value);
+        if (! $value) {
+            return $this->builder;
+        }
+        $whereMethod = is_array($value) ? 'whereIn' : 'where';
+        return $this->builder->$whereMethod($this->composedKey($key), $value);
     }
 
     private function composedKey($key)
