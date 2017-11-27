@@ -125,13 +125,13 @@ class DefaultFilters extends QueryFilters
      * @param $value
      * @return $this
      */
-    protected function where($key, $value)
+    protected function where($key, $value, $comparison = "=")
     {
         if (! $value) {
             return $this->builder;
         }
         $whereMethod = is_array($value) ? 'whereIn' : 'where';
-        return $this->builder->$whereMethod($this->composedKey($key), $value);
+        return $this->builder->$whereMethod($this->composedKey($key), $comparison, $value);
     }
 
     private function composedKey($key)
