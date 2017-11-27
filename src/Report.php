@@ -67,15 +67,9 @@ abstract class Report
      */
     public function forDates($start, $end = null)
     {
-        if ($start instanceof Carbon) {
-            $start = $start->toDateString();
-        }
-        if ($end && $end instanceof Carbon) {
-            $end = $end->toDateString();
-        }
-
+        $start = Carbon::parse($start)->toDateString();
         $this->filters->addFilter("start_date", $start);
-        $this->filters->addFilter("end_date", $end ? : Carbon::parse($start)->addDay()->toDateString());
+        $this->filters->addFilter("end_date", $end ? Carbon::parse($end)->toDateString() : $start);
         return $this;
     }
 
