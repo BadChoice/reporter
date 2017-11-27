@@ -130,8 +130,10 @@ class DefaultFilters extends QueryFilters
         if (! $value) {
             return $this->builder;
         }
-        $whereMethod = is_array($value) ? 'whereIn' : 'where';
-        return $this->builder->$whereMethod($this->composedKey($key), $comparison, $value);
+        if (is_array($value)) {
+            return $this->builder->whereIn($this->composedKey($key), $value);
+        }
+        return $this->builder->where($this->composedKey($key), $comparison, $value);
     }
 
     private function composedKey($key)
