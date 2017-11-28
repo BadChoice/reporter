@@ -40,9 +40,8 @@ trait DateFiltersTrait
         if (! $this->dateField) {
             return $this->builder;
         }
-        if ($dayofweek != null && $dayofweek > 0 && $dayofweek < 8) {
-            return $this->builder->where(DB::raw("dayofweek({$this->dateField})"), '=', $dayofweek);
-        }
+        $whereMethod = is_array($dayofweek) ? "whereIn" : "where";
+        return $this->builder->$whereMethod(DB::raw("dayofweek({$this->dateField})"), $dayofweek);
     }
 
     public function start_time($time = "00:00")
