@@ -12,6 +12,7 @@ abstract class Report
     protected $exportColumns    = [];
     protected $exportTitles     = [];
     protected $totalize         = null;
+    protected $withEagerLoading = false;
 
     protected $exporter;
 
@@ -159,5 +160,11 @@ abstract class Report
     private function datetimeTransform($value)
     {
         return Carbon::parse($value)->timezone(auth()->user()->timezone)->toDatetimeString();
+    }
+
+    public function withEagerLoading($withEagerLoading = true)
+    {
+        $this->withEagerLoading = $withEagerLoading;
+        return $this;
     }
 }
