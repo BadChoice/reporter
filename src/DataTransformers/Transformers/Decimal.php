@@ -6,9 +6,9 @@ use BadChoice\Reports\DataTransformers\TransformsRowInterface;
 
 class Decimal implements TransformsRowInterface
 {
-    public function transformRow($field, $row, $value, $commaSeparated)
+    public function transformRow($field, $row, $value, $commaDecimal)
     {
-        if ($commaSeparated) {
+        if ($commaDecimal) {
             return number_format($value, 2, ',', '.');
         }
         return number_format($value, 2);
