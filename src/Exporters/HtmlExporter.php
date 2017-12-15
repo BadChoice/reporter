@@ -36,9 +36,10 @@ class HtmlExporter extends BaseExporter
         $this->output .= $this->getExportFields()->reduce(function ($carry, $field) use ($params) {
             $classes = $field->hideMobile ? "hide-mobile" : "";
             if (! $field->sortable) {
-                return $carry . "<th classes='{$classes}'>{$field->getTitle()}</th>";
+                return $carry . "<th class='{$classes}'>{$field->getTitle()}</th>";
             }
-            return $carry . "<th classes='{$classes}'><a href='?sort={$field->field}&{$params}'>{$field->getTitle()}</a></th>";
+            $url = $this->addQueryToUrl(request()->url() . "?{$params}", ["sort" => $field->field]);
+            return $carry . "<th class='{$classes}'><a href='{$url}'>{$field->getTitle()}</a></th>";
         }, "<thead class='sticky'><tr>");
         $this->output .= "</tr></thead>";
     }
@@ -60,5 +61,27 @@ class HtmlExporter extends BaseExporter
     protected function getType()
     {
         return "html";
+    }
+
+    private function addQueryToUrl($url, $query)
+    {
+        $url = url($url);
+        if ($query == null) {
+            return $url;
+        }
+        if (is_array($query)) {
+            $query = implode("&", array_map( function($value, $key) {
+                    return "{$key}=$value";
+                }, $query, array_keys($query))
+            );
+        }
+        $url_components = parse_url($url);
+        if (empty($url_components['query'])) {
+            return $url . '?' . ltrim($query, '?');
+        }
+        parse_str($url_components['query'], $original_query_string);
+        parse_str($query, $merged_query_string);
+        $merged_result = array_merge($original_query_string, $merged_query_string);
+        return str_replace($url_components['query'], http_build_query($merged_result), $url);
     }
 }
