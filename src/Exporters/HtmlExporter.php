@@ -3,6 +3,7 @@
 namespace BadChoice\Reports\Exporters;
 
 use BadChoice\Reports\Filters\Filters;
+use BadChoice\Reports\Utils\QueryUrl;
 
 class HtmlExporter extends BaseExporter
 {
@@ -36,9 +37,10 @@ class HtmlExporter extends BaseExporter
         $this->output .= $this->getExportFields()->reduce(function ($carry, $field) use ($params) {
             $classes = $field->hideMobile ? "hide-mobile" : "";
             if (! $field->sortable) {
-                return $carry . "<th classes='{$classes}'>{$field->getTitle()}</th>";
+                return $carry . "<th class='{$classes}'>{$field->getTitle()}</th>";
             }
-            return $carry . "<th classes='{$classes}'><a href='?sort={$field->field}&{$params}'>{$field->getTitle()}</a></th>";
+            $url = QueryUrl::addQueryToUrl(request()->url() . "?{$params}", ["sort" => $field->field]);
+            return $carry . "<th class='{$classes}'><a href='{$url}'>{$field->getTitle()}</a></th>";
         }, "<thead class='sticky'><tr>");
         $this->output .= "</tr></thead>";
     }
@@ -50,7 +52,7 @@ class HtmlExporter extends BaseExporter
             $this->output .= "<tr>";
             foreach ($this->getExportFields() as $field) {
                 $classes = $field->hideMobile ? "hide-mobile" : "";
-                $this->output .= "<td class='".$classes."'>{$field->getValue($row)}</td>";
+                $this->output .= "<td class='{$classes}'>{$field->getValue($row)}</td>";
             }
             $this->output .= "</tr>";
         });
