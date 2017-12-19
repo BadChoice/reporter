@@ -2,15 +2,17 @@
 
 namespace BadChoice\Reports\DataTransformers\Transformers;
 
-use BadChoice\Reports\DataTransformers\TransformsRowInterface;
+use BadChoice\Reports\DataTransformers\TransformsValueInterface;
 
-class Decimal implements TransformsRowInterface
+class Decimal implements TransformsValueInterface
 {
-    public function transformRow($field, $row, $value, $commaDecimal)
+    public static $commaDecimal = false;
+
+    public function transform($value)
     {
-        if ($commaDecimal) {
+        if (static::$commaDecimal) {
             return number_format($value, 2, ',', '.');
         }
-        return number_format($value, 2);
-    }
+          return number_format($value, 2);
+      }
 }
