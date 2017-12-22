@@ -160,7 +160,7 @@ class DefaultFilters extends QueryFilters
         if ($this->rawDateField) {
             return $this->rawDateField;
         }
-        $this->rawDateField = str_contains($this->dateField, '.') ? DB::connection()->getTablePrefix() . $this->dateField : $this->dateField;
+        $this->rawDateField = str_contains($this->dateField, '.') ? DB::getTablePrefix() . $this->dateField : $this->dateField;
         return $this->rawDateField;
     }
 }
