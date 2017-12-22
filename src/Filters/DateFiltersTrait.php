@@ -41,7 +41,7 @@ trait DateFiltersTrait
             return $this->builder;
         }
         $whereMethod = is_array($dayofweek) ? "whereIn" : "where";
-        return $this->builder->$whereMethod(DB::raw("dayofweek({$this->dateField})"), $dayofweek);
+        return $this->builder->$whereMethod(DB::raw("dayofweek(" . $this->rawDateField() . ")"), $dayofweek);
     }
 
     public function start_time($time = "00:00")
@@ -49,7 +49,7 @@ trait DateFiltersTrait
         if (! $this->dateField) {
             return $this->builder;
         }
-        return $this->builder->whereRaw("TIME(DATE_ADD({$this->dateField}, INTERVAL {$this->offsetHours} HOUR)) > '{$time}'");
+        return $this->builder->whereRaw("TIME(DATE_ADD(" . $this->rawDateField() . ", INTERVAL {$this->offsetHours} HOUR)) > '{$time}'");
     }
 
     public function end_time($time = "23:59")
@@ -57,6 +57,6 @@ trait DateFiltersTrait
         if (! $this->dateField) {
             return $this->builder;
         }
-        return $this->builder->whereRaw("TIME(DATE_ADD({$this->dateField}, INTERVAL {$this->offsetHours} HOUR)) < '{$time}'");
+        return $this->builder->whereRaw("TIME(DATE_ADD(" . $this->rawDateField() . ", INTERVAL {$this->offsetHours} HOUR)) < '{$time}'");
     }
 }
