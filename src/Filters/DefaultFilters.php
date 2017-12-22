@@ -18,7 +18,7 @@ class DefaultFilters extends QueryFilters
     |
     */
     protected $dateField    = 'created_at';
-    protected $rawDateField = null;
+    private $rawDateField   = null;
 
     /*
     |---------------------------------------------------------------------
