@@ -50,9 +50,12 @@ class QueryUrl
 
     protected function generateQueryString()
     {
-        return implode("&", array_map(function ($key, $value) {
+        return collect($this->query)->map(function($value, $key){
+            if (is_array($value)){
+                return $this->generateMultipleQueryString($key, $value);
+            }
             return "{$key}={$value}";
-        }, array_keys($this->query), array_values($this->query)));
+        })->implode('&');
     }
 
     /**
@@ -65,5 +68,11 @@ class QueryUrl
             parse_str($query, $query);
         }
         return $query;
+    }
+
+    private function generateMultipleQueryString($key, $values) {
+        return collect($values)->map(function($value) use($key){
+            return "{$key}[]={$value}";
+        })->implode("&");
     }
 }

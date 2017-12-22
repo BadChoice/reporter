@@ -45,4 +45,10 @@ class QueryUrlTest extends BaseTestCase
     {
         $this->assertEquals('http://revoxef.works?query1=4&query3=4', QueryUrl::addQueryToUrl('http://revoxef.works?query1=3', "query1=4&query3=4"));
     }
+
+    /** @test */
+    public function can_get_url_with_query_adding_an_existing_query_with_repeated_elements()
+    {
+        $this->assertEquals('http://revoxef.works?query1=4&query10[]=10&query10[]=11&query3=4', QueryUrl::addQueryToUrl('http://revoxef.works?query1=3&query10[]=10&query10[]=11', "query1=4&query3=4"));
+    }
 }
