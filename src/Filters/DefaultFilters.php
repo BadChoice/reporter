@@ -3,6 +3,7 @@
 namespace BadChoice\Reports\Filters;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DefaultFilters extends QueryFilters
 {
@@ -16,7 +17,8 @@ class DefaultFilters extends QueryFilters
     | Set it as null if no date filters should apply
     |
     */
-    protected $dateField = 'created_at';
+    protected $dateField    = 'created_at';
+    private $rawDateField   = null;
 
     /*
     |---------------------------------------------------------------------
@@ -151,5 +153,14 @@ class DefaultFilters extends QueryFilters
             return false;
         }
         return in_array($table, $joins);
+    }
+
+    public function rawDateField()
+    {
+        if ($this->rawDateField) {
+            return $this->rawDateField;
+        }
+        $this->rawDateField = str_contains($this->dateField, '.') ? DB::connection()->getTablePrefix() . $this->dateField : $this->dateField;
+        return $this->rawDateField;
     }
 }
