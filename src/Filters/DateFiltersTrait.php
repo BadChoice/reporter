@@ -46,22 +46,16 @@ trait DateFiltersTrait
 
     public function start_time($time = null)
     {
-        if (! $this->dateField) {
+        if (! $this->dateField || ! $time) {
             return $this->builder;
-        }
-        if ($time == null) {
-            return $this->builder->whereRaw("{$this->rawDateField()} > '{$this->openingTime}'");
         }
         return $this->builder->whereRaw("TIME(DATE_ADD(" . $this->rawDateField() . ", INTERVAL {$this->offsetHours} HOUR)) > '{$time}'");
     }
 
     public function end_time($time = null)
     {
-        if (! $this->dateField) {
+        if (! $this->dateField || ! $time) {
             return $this->builder;
-        }
-        if ($time == null) {
-            return $this->builder->whereRaw("{$this->rawDateField()} > '{$this->openingTime}'");
         }
         return $this->builder->whereRaw("TIME(DATE_ADD(" . $this->rawDateField() . ", INTERVAL {$this->offsetHours} HOUR)) < '{$time}'");
     }
