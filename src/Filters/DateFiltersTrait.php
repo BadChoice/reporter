@@ -44,18 +44,24 @@ trait DateFiltersTrait
         return $this->builder->$whereMethod(DB::raw("dayofweek(" . $this->rawDateField() . ")"), $dayofweek);
     }
 
-    public function start_time($time = "00:00")
+    public function start_time($time = null)
     {
         if (! $this->dateField) {
             return $this->builder;
         }
+        if ($time == null) {
+            return $this->builder->whereRaw("{$this->rawDateField()} > '{$this->openingTime}'");
+        }
         return $this->builder->whereRaw("TIME(DATE_ADD(" . $this->rawDateField() . ", INTERVAL {$this->offsetHours} HOUR)) > '{$time}'");
     }
 
-    public function end_time($time = "23:59")
+    public function end_time($time = null)
     {
         if (! $this->dateField) {
             return $this->builder;
+        }
+        if ($time == null) {
+            return $this->builder->whereRaw("{$this->rawDateField()} > '{$this->openingTime}'");
         }
         return $this->builder->whereRaw("TIME(DATE_ADD(" . $this->rawDateField() . ", INTERVAL {$this->offsetHours} HOUR)) < '{$time}'");
     }
