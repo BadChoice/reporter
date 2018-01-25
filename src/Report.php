@@ -97,6 +97,9 @@ abstract class Report
         return $this;
     }
 
+    /** @deprecated
+     * We are using exporters now
+     */
     public function download($parent_id = null)
     {
         if (! $this->exporter) {
@@ -118,6 +121,9 @@ abstract class Report
 
     public function export($type = 'xls')
     {
+        if (! $this->reportExporter) {
+            return $this->download();   //TODO: Remove this, this is used for the UsersReport that doesn't have exporter yet
+        }
         if ($type == 'xls') {
             return (new $this->reportExporter)->toXls($this->query(), $this->getExportName());
         } elseif ($type == 'html') {
