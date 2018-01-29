@@ -2,12 +2,10 @@
 
 namespace BadChoice\Reports\DataTransformers\Transformers;
 
-use BadChoice\Reports\DataTransformers\TransformsValueInterface;
-
-class Percentage implements TransformsValueInterface
+class Percentage extends Decimal
 {
     public function transform($value)
     {
-        return number_format($value, 2) . ' %';
+        return parent::transform($value) . ' %';
     }
 }
