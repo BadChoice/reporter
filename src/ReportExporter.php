@@ -10,13 +10,11 @@ use BadChoice\Reports\Filters\Filters;
 
 abstract class ReportExporter
 {
-    public $fields;
     protected $filters;
 
     public function __construct($filters = null)
     {
         $this->setFilters($filters);
-        $this->fields = $this->getFields();
     }
 
     public function setFilters($filters)
@@ -35,22 +33,22 @@ abstract class ReportExporter
 
     public function toHtml($collection)
     {
-        return (new HtmlExporter($this->fields, $collection))->export()->print();
+        return (new HtmlExporter($this->getFields(), $collection))->export()->print();
     }
 
     public function toXls($collection, $title = "export")
     {
-        return (new XlsExporter($this->fields, $collection))->export()->download($title);
+        return (new XlsExporter($this->getFields(), $collection))->export()->download($title);
     }
 
     public function toCsv($collection, $title = "export")
     {
-        return (new CsvExporter($this->fields, $collection))->export()->download($title);
+        return (new CsvExporter($this->getFields(), $collection))->export()->download($title);
     }
 
     public function toFake($collection)
     {
-        return (new FakeExporter($this->fields, $collection))->export();
+        return (new FakeExporter($this->getFields(), $collection))->export();
     }
 
     abstract protected function getFields();
