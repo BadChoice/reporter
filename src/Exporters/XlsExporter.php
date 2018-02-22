@@ -2,12 +2,19 @@
 
 namespace BadChoice\Reports\Exporters;
 
+use BadChoice\Reports\DataTransformers\Transformers\Currency;
+use BadChoice\Reports\DataTransformers\Transformers\Decimal;
 use Maatwebsite\Excel\Facades\Excel;
 
 class XlsExporter extends BaseExporter
 {
     private $file;
     private $excel;
+
+    public function __construct($fields, $collection) {
+        parent::__construct($fields, $collection);
+        app()->bind(Currency::class, Decimal::class);
+    }
 
     public function download($title)
     {
