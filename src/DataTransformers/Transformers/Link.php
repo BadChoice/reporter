@@ -10,7 +10,7 @@ class Link implements TransformsRowInterface
     {
         $class = "";
         $text  = $value;
-        $link  = $this->parseLink($row, $transformData);
+        $link  = $this->parseLink($row, $transformData, $value);
         if (is_array($transformData)) {
             $class = $transformData['class'] ?? "";
             if (isset($transformData['icon'])) {
@@ -24,18 +24,18 @@ class Link implements TransformsRowInterface
     /**
      * @param $row
      * @param $link
+     * @param $value
      * @return mixed
      */
-    public function parseLink($row, $link)
-    {
-        $link    = is_array($link) ? $link['url'] : $link;
+    public function parseLink($row, $link, $value = null) {
+        $link = is_array($link) ? $link['url'] : $link;
         $matches = null;
-        $results = preg_match_all("/{([a-z,A-Z,0-9,_,-]*)}/", $link, $matches);
+        $results = preg_match_all("/{([a-z,A-Z,0-9,_,-,.]*)}/", $link, $matches);
         if (! $results) {
             return $link;
         }
         foreach (range(0, $results - 1) as $i) {
-            $link   = str_replace($matches[0][$i], $row[$matches[1][$i]], $link);
+            $link = str_replace($matches[0][$i], $row[$matches[1][$i]] ?? $value, $link);
         }
         return $link;
     }
