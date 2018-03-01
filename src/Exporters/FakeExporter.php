@@ -2,7 +2,7 @@
 
 namespace BadChoice\Reports\Exporters;
 
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert;
 
 class FakeExporter extends BaseExporter
 {
@@ -54,32 +54,32 @@ class FakeExporter extends BaseExporter
     public function assertHasHeaders($titles)
     {
         if (is_string($titles)) {
-            PHPUnit_Framework_Assert::assertContains(strtolower($titles), strtolower($this->headers), "The header doesn't contains {$titles}");
+            Assert::assertContains(strtolower($titles), strtolower($this->headers), "The header doesn't contains {$titles}");
             return;
         }
         collect($titles)->each(function ($title) {
-            PHPUnit_Framework_Assert::assertContains(strtolower($title), strtolower($this->headers), "The header doesn't contains {$title}");
+            Assert::assertContains(strtolower($title), strtolower($this->headers), "The header doesn't contains {$title}");
         });
     }
 
     public function assertDoesNotHaveHeaders($titles)
     {
         if (is_string($titles)) {
-            PHPUnit_Framework_Assert::assertNotContains(strtolower($titles), strtolower($this->headers), "The header contains {$titles}");
+            Assert::assertNotContains(strtolower($titles), strtolower($this->headers), "The header contains {$titles}");
             return;
         }
         collect($titles)->each(function ($title) {
-            PHPUnit_Framework_Assert::assertNotContains(strtolower($title), strtolower($this->headers), "The header contains {$title}");
+            Assert::assertNotContains(strtolower($title), strtolower($this->headers), "The header contains {$title}");
         });
     }
 
     public function assertRowIs($rowNumber, $key, $value)
     {
-        PHPUnit_Framework_Assert::assertEquals($value, $this->rows[$rowNumber][$key]);
+        Assert::assertEquals($value, $this->rows[$rowNumber][$key]);
     }
 
     public function assertRowsCount($count)
     {
-        PHPUnit_Framework_Assert::assertCount($count, $this->rows);
+        Assert::assertCount($count, $this->rows);
     }
 }

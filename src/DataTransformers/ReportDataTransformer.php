@@ -21,18 +21,18 @@ class ReportDataTransformer
 
     public static function applyTransformation($row, $field, $value, $transformation, $transformData)
     {
-        $transformer = static::getTransformer(ucFirst($transformation));
-
-        if (! class_exists($transformer)) {
+        try {
+            $transformer = app(static::getTransformer(ucFirst($transformation)));
+        } catch(\Exception $e) {
             return $value;
         }
 
         if (static::doesImplement("TransformsRowInterface", $transformer)) {
-            return (new $transformer)->transformRow($field, $row, $value, $transformData);
+            return $transformer->transformRow($field, $row, $value, $transformData);
         }
 
         if (static::doesImplement("TransformsValueInterface", $transformer)) {
-            return (new $transformer)->transform($value);
+            return $transformer->transform($value);
         }
 
         throw new \Exception("No valid transformer for this type");

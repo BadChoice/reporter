@@ -12,6 +12,8 @@ abstract class ReportExporter
 {
     protected $filters;
 
+    abstract protected function getFields();
+
     public function __construct($filters = null)
     {
         $this->setFilters($filters);
@@ -50,6 +52,4 @@ abstract class ReportExporter
     {
         return (new FakeExporter($this->getFields(), $collection))->export();
     }
-
-    abstract protected function getFields();
 }
