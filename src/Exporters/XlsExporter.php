@@ -14,6 +14,11 @@ class XlsExporter extends BaseExporter
         return $this->excel->setFilename($title)->download('xlsx');
     }
 
+    public function save($filename)
+    {
+        return $this->excel->setFilename($filename)->save();
+    }
+
     public function init()
     {
         $name       = str_random(25);

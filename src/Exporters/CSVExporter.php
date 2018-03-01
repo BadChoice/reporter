@@ -13,6 +13,11 @@ class CsvExporter extends BaseExporter
         return $this->makeResponse($title);
     }
 
+    public function save($filename)
+    {
+        file_put_contents($filename, $this->output);
+    }
+
     public function print()
     {
         return $this->output;
