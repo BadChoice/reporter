@@ -8,51 +8,17 @@ class CSVExporter extends BaseExporter implements ReportExporter
 {
     public function download($name)
     {
-        return $this->fromQuery($name);
+        $output = '';
+        $this->writeHeader($output);
+        $this->forEachRecord(function ($newRow) use (&$output) {
+            $this->writeRow($output, $newRow);
+        });
+        return $this->makeResponse($output, $name);
     }
 
-    /**
-     * @param $title
-     * @param $raw
-     * @return mixed
-     */
     public static function fromRaw($title, $raw)
     {
         return (new static)->makeResponse($raw, $title);
-    }
-
-    /**
-     * This functions creates a CSV from a collection, if the collection is too big there will be a memory error (when doing the get before calling this function)
-     * eloquent
-     * @param $title string Desired output filename
-     * @param \Illuminate\Support\Collection $collection the collection (after performing the get)
-     * @return mixed
-     */
-    public function fromCollection($title, $collection)
-    {
-        $output = '';
-        $this->writeHeader($output);
-        $this->parseCollection($collection, function ($newRow) use (&$output) {
-            $this->writeRow($output, $newRow);
-        });
-        return $this->makeResponse($output, $title);
-    }
-
-    /**
-     * This functions uses the chunk method, that basically does small queries so the ram is not eated by
-     * eloquent
-     *
-     * @param $title string output filename
-     * @return mixed
-     */
-    public function fromQuery($title)
-    {
-        $output='';
-        $this->writeHeader($output);
-        $this->parseQuery(function ($newRow) use (&$output) {
-            $this->writeRow($output, $newRow);
-        });
-        return $this->makeResponse($output, $title);
     }
 
     private function writeHeader(&$output)
