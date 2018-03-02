@@ -8,32 +8,17 @@ class CSVExporter extends BaseExporter implements ReportExporter
 {
     public function download($name)
     {
-        return $this->fromQuery($name);
+        $output = '';
+        $this->writeHeader($output);
+        $this->forEachRecord(function ($newRow) use (&$output) {
+            $this->writeRow($output, $newRow);
+        });
+        return $this->makeResponse($output, $name);
     }
 
     public static function fromRaw($title, $raw)
     {
         return (new static)->makeResponse($raw, $title);
-    }
-
-    public function fromCollection($title, $collection)
-    {
-        $output = '';
-        $this->writeHeader($output);
-        $this->parseCollection($collection, function ($newRow) use (&$output) {
-            $this->writeRow($output, $newRow);
-        });
-        return $this->makeResponse($output, $title);
-    }
-
-    public function fromQuery($title)
-    {
-        $output='';
-        $this->writeHeader($output);
-        $this->parseQuery(function ($newRow) use (&$output) {
-            $this->writeRow($output, $newRow);
-        });
-        return $this->makeResponse($output, $title);
     }
 
     private function writeHeader(&$output)

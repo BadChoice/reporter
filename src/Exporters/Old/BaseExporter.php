@@ -7,6 +7,7 @@ class BaseExporter
     public $fields;
     public $transformations;
     public $query;
+    protected $collection = null;
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder $query to create the CSV (it will be called using chunk to not eat the RAM)
@@ -22,22 +23,30 @@ class BaseExporter
         return $this;
     }
 
-    public function parseQuery($callback)
+    public function setCollection($collection)
     {
+        $this->collection = $collection;
+        return $this;
+    }
+
+    public function forEachRecord($callback)
+    {
+        if ($this->collection) {
+            return $this->foreachCollectionItem($this->collection, $callback);
+        }
         $this->query->chunk(200, function ($collection) use ($callback) {
-            $this->parseCollection($collection, $callback);
+            $this->foreachCollectionItem($collection, $callback);
         });
     }
 
-    public function parseCollection($collection, $callback)
+    private function foreachCollectionItem($collection, $callback)
     {
-        foreach ($collection as $row) {
-            $newRow = [];
-            foreach ($this->fields as $fieldName) {
-                $newRow[$fieldName] = $this->parseRowField($row, $fieldName);
-            }
+        $collection->each(function ($row) use ($callback) {
+            $newRow = collect($this->fields)->mapWithKeys(function ($fieldName) use ($row){
+                return [$fieldName => $this->parseRowField($row, $fieldName)];
+            });
             $callback($newRow);
-        }
+        });
     }
 
     /**
