@@ -38,14 +38,14 @@ abstract class ReportExporter
         return (new HtmlExporter($this->getFields(), $collection))->export()->print();
     }
 
-    public function toXls($collection, $title = "export")
+    public function toXls($collection)
     {
-        return (new XlsExporter($this->getFields(), $collection))->export()->download($title);
+        return (new XlsExporter($this->getFields(), $collection))->export();
     }
 
-    public function toCsv($collection, $title = "export")
+    public function toCsv($collection)
     {
-        return (new CsvExporter($this->getFields(), $collection))->export()->download($title);
+        return (new CsvExporter($this->getFields(), $collection))->export();
     }
 
     public function toFake($collection)
