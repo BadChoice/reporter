@@ -2,12 +2,13 @@
 
 namespace BadChoice\Reports\Exporters\Old;
 
+use Illuminate\Support\Collection;
+
 class BaseExporter
 {
     public $fields;
     public $transformations;
     public $query;
-    protected $collection = null;
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder $query to create the CSV (it will be called using chunk to not eat the RAM)
@@ -23,16 +24,10 @@ class BaseExporter
         return $this;
     }
 
-    public function setCollection($collection)
-    {
-        $this->collection = $collection;
-        return $this;
-    }
-
     public function forEachRecord($callback)
     {
-        if ($this->collection) {
-            return $this->foreachCollectionItem($this->collection, $callback);
+        if ($this->query instanceof Collection) {
+            return $this->foreachCollectionItem($this->query, $callback);
         }
         $this->query->chunk(200, function ($collection) use ($callback) {
             $this->foreachCollectionItem($collection, $callback);
