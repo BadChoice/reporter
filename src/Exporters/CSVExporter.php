@@ -40,7 +40,8 @@ class CsvExporter extends BaseExporter
 
     private function makeResponse($title)
     {
-        return Response::make(rtrim($this->output, "\n"), 200, $this->getHeaders($title));
+        $output = mb_convert_encoding(rtrim($this->output, "\n"), 'UCS-2LE', 'UTF-8');
+        return Response::make($output, 200, $this->getHeaders($title));
     }
 
     public function init()
