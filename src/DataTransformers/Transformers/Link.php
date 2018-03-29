@@ -37,7 +37,7 @@ class Link implements TransformsRowInterface
         foreach (range(0, $results - 1) as $i) {
             $options = explode('||', substr($matches[0][$i], 1, -1));
             $value = collect($options)->first(function ($option) use ($row) {
-                return $row[$option];
+                return isset($row[$option]);
             });
             $link   = str_replace($matches[0][$i], $row[$value], $link);
         }
