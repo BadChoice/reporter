@@ -30,16 +30,16 @@ class Link implements TransformsRowInterface
     {
         $link    = is_array($link) ? $link['url'] : $link;
         $matches = null;
-        $results = preg_match_all("/{([|,a-z,A-Z,0-9,_,-]*)}/", $link, $matches);
+        $results = preg_match_all("/{([|,a-z,A-Z,0-9,_,-,\.]*)}/", $link, $matches);
         if (! $results) {
             return $link;
         }
         foreach (range(0, $results - 1) as $i) {
             $options = explode('||', substr($matches[0][$i], 1, -1));
             $value = collect($options)->first(function ($option) use ($row) {
-                return isset($row[$option]);
+                return data_get($row, $option);
             });
-            $link   = str_replace($matches[0][$i], $row[$value], $link);
+            $link   = str_replace($matches[0][$i], data_get($row, $value), $link);
         }
         return $link;
     }
