@@ -28,16 +28,31 @@ class Link implements TransformsRowInterface
      */
     public function parseLink($row, $link)
     {
-        $link    = is_array($link) ? $link['url'] : $link;
-        $matches = null;
-        $results = preg_match_all("/{([a-z,A-Z,0-9,_,-]*)}/", $link, $matches);
-        if (! $results) {
-            return $link;
-        }
-        foreach (range(0, $results - 1) as $i) {
-            $link   = str_replace($matches[0][$i], $row[$matches[1][$i]], $link);
-        }
-        return $link;
+        $link           = is_array($link) ? $link['url'] : $link;
+        $linkVariables  = null;
+        $variablesCount = preg_match_all("/{([|,a-z,A-Z,0-9,_,-,\.]*)}/", $link, $linkVariables);
+        
+        return collect($linkVariables[0])->reduce(function($link, $variable) use ($row) {
+            return $this->updateLinkWith($variable, $row, $link);
+        }, $link);
+    }
+
+    private function updateLinkWith($variable, $row, $link)
+    {
+        return str_replace($variable, 
+                           data_get($row, $this->getVariableName($variable, $row)), 
+                           $link);
+    }
+
+    private function getVariableName($variable, $row)
+    {
+        return $this->getAvailableVariableNames($variable)->first(function ($possibleVariable) use ($row) {
+            return data_get($row, $possibleVariable) != null;
+        });
+    }
+
+    private function getAvailableVariableNames($variable){
+        return collect( explode('||', substr($variable, 1, -1)));
     }
 
     protected function getDisplayText($transformData, $value)
