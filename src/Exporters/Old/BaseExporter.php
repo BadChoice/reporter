@@ -2,6 +2,8 @@
 
 namespace BadChoice\Reports\Exporters\Old;
 
+use Illuminate\Support\Collection;
+
 class BaseExporter
 {
     public $fields;
@@ -22,22 +24,24 @@ class BaseExporter
         return $this;
     }
 
-    public function parseQuery($callback)
+    public function forEachRecord($callback)
     {
+        if ($this->query instanceof Collection) {
+            return $this->foreachCollectionItem($this->query, $callback);
+        }
         $this->query->chunk(200, function ($collection) use ($callback) {
-            $this->parseCollection($collection, $callback);
+            $this->foreachCollectionItem($collection, $callback);
         });
     }
 
-    public function parseCollection($collection, $callback)
+    private function foreachCollectionItem($collection, $callback)
     {
-        foreach ($collection as $row) {
-            $newRow = [];
-            foreach ($this->fields as $fieldName) {
-                $newRow[$fieldName] = $this->parseRowField($row, $fieldName);
-            }
+        $collection->each(function ($row) use ($callback) {
+            $newRow = collect($this->fields)->mapWithKeys(function ($fieldName) use ($row){
+                return [$fieldName => $this->parseRowField($row, $fieldName)];
+            });
             $callback($newRow);
-        }
+        });
     }
 
     /**

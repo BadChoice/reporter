@@ -8,41 +8,24 @@ class ExcelExporter extends BaseExporter implements ReportExporter
 {
     public function download($name)
     {
-        return $this->fromQuery($name);
-    }
-
-    public function fromQuery($name)
-    {
-        $file   = $this->createTempfile($name);
-        $excel  = $this->fillExcel($file);
-        unlink($file["full"]);
+        $file  = $this->createExcel($name);
+        $excel = Excel::load($file['full']);
         $excel->download('xlsx');
+        unlink($file["full"]);
     }
 
-    public function fromCollection()
-    {
-    }
-
-    private function createTempFile($name)
+    private function createExcel($name)
     {
         return Excel::create(auth()->user()->tenant . "-" . $name, function ($excel) {
             $excel->sheet('report', function ($sheet) {
-            });
-        })->store('xls', false, true);
-    }
-
-    private function fillExcel($file)
-    {
-        return Excel::load($file["full"], function ($excel) {
-            $excel->sheet('report', function ($sheet) {
                 $this->writeHeader($sheet);
                 $rowPointer = 2;
-                $this->parseQuery(function ($newRow) use ($sheet, &$rowPointer) {
+                $this->forEachRecord(function ($newRow) use ($sheet, &$rowPointer) {
                     $this->writeRecordToSheet($rowPointer, $newRow, $sheet);
                     $rowPointer++;
                 });
             });
-        });
+        })->store('xls', false, true);
     }
 
     private function writeHeader($sheet)

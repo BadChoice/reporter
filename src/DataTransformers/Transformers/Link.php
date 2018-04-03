@@ -27,17 +27,32 @@ class Link implements TransformsRowInterface
      * @param $value
      * @return mixed
      */
-    public function parseLink($row, $link, $value = null) {
-        $link = is_array($link) ? $link['url'] : $link;
-        $matches = null;
-        $results = preg_match_all("/{([a-z,A-Z,0-9,_,-,.]*)}/", $link, $matches);
-        if (! $results) {
-            return $link;
-        }
-        foreach (range(0, $results - 1) as $i) {
-            $link = str_replace($matches[0][$i], $row[$matches[1][$i]] ?? $value, $link);
-        }
-        return $link;
+    public function parseLink($row, $link, $alternativeValue = null)
+    {
+        $link           = is_array($link) ? $link['url'] : $link;
+        $linkVariables  = null;
+        $variablesCount = preg_match_all("/{([|,a-z,A-Z,0-9,_,-,\.]*)}/", $link, $linkVariables);
+        return collect($linkVariables[0])->reduce(function($link, $variable) use ($row, $alternativeValue) {
+            return $this->updateLinkWith($variable, $row, $link, $alternativeValue);
+        }, $link);
+    }
+
+    private function updateLinkWith($variable, $row, $link, $alternativeValue)
+    {
+        return str_replace($variable, 
+                           data_get($row, $this->getVariableName($variable, $row), $alternativeValue), 
+                           $link);
+    }
+
+    private function getVariableName($variable, $row)
+    {
+        return $this->getAvailableVariableNames($variable)->first(function ($possibleVariable) use ($row) {
+            return data_get($row, $possibleVariable) != null;
+        }) ? : -1;
+    }
+
+    private function getAvailableVariableNames($variable){
+        return collect( explode('||', substr($variable, 1, -1)));
     }
 
     protected function getDisplayText($transformData, $value)
