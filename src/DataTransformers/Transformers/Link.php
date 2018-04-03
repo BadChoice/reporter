@@ -10,7 +10,7 @@ class Link implements TransformsRowInterface
     {
         $class = "";
         $text  = $value;
-        $link  = $this->parseLink($row, $transformData);
+        $link  = $this->parseLink($row, $transformData, $value);
         if (is_array($transformData)) {
             $class = $transformData['class'] ?? "";
             if (isset($transformData['icon'])) {
@@ -26,21 +26,20 @@ class Link implements TransformsRowInterface
      * @param $link
      * @return mixed
      */
-    public function parseLink($row, $link)
+    public function parseLink($row, $link, $alternativeValue = null)
     {
         $link           = is_array($link) ? $link['url'] : $link;
         $linkVariables  = null;
         $variablesCount = preg_match_all("/{([|,a-z,A-Z,0-9,_,-,\.]*)}/", $link, $linkVariables);
-        
-        return collect($linkVariables[0])->reduce(function($link, $variable) use ($row) {
-            return $this->updateLinkWith($variable, $row, $link);
+        return collect($linkVariables[0])->reduce(function($link, $variable) use ($row, $alternativeValue) {
+            return $this->updateLinkWith($variable, $row, $link, $alternativeValue);
         }, $link);
     }
 
-    private function updateLinkWith($variable, $row, $link)
+    private function updateLinkWith($variable, $row, $link, $alternativeValue)
     {
         return str_replace($variable, 
-                           data_get($row, $this->getVariableName($variable, $row)), 
+                           data_get($row, $this->getVariableName($variable, $row), $alternativeValue), 
                            $link);
     }
 
@@ -48,7 +47,7 @@ class Link implements TransformsRowInterface
     {
         return $this->getAvailableVariableNames($variable)->first(function ($possibleVariable) use ($row) {
             return data_get($row, $possibleVariable) != null;
-        });
+        }) ? : -1;
     }
 
     private function getAvailableVariableNames($variable){

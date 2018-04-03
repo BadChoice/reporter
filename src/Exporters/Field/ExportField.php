@@ -89,10 +89,15 @@ class ExportField
     public function getValue($row)
     {
         if(is_array($this->transformation)){
-            return collect($this->transformation)->reduce(function($value, $transformation) use($row){
-                return ReportDataTransformer::transform($row, $this->field, $value, $transformation);
-            }, data_get($row, $this->field));
+            return $this->transformMany($row);
         }
         return ReportDataTransformer::transform($row, $this->field, data_get($row,$this->field), $this->transformation, $this->transformationData);
+    }
+
+    private function transformMany($row)
+    {
+        return collect($this->transformation)->reduce(function ($value, $transformation) use ($row) {
+            return ReportDataTransformer::transform($row, $this->field, $value, $transformation);
+        }, data_get($row, $this->field));
     }
 }

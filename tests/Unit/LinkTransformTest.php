@@ -10,15 +10,24 @@ class LinkTransformTest extends TestCase
 {
 
     /** @test */
-    public function can_create_a_link_with_multiple_fields_replacements(){
+    public function can_create_a_link_with_multiple_fields_replacements()
+    {
         $link = (new Link)->parseLink(['name' => 'pepito', 'id' => 1, 'other' => 'other'], 'http://www.mynamelink.com/{id}/{name}');
         $this->assertEquals("http://www.mynamelink.com/1/pepito", $link);
     }
 
     /** @test */
-    public function can_create_a_link_with_objects_replacement(){
+    public function can_create_a_link_with_objects_replacement_using_dots()
+    {
         $link = (new Link)->parseLink(['person' => ['name' => 'pepito']], 'http://www.mynamelink.com/{person.name}');
         $this->assertEquals("http://www.mynamelink.com/pepito", $link);
+    }
+
+    /** @test */
+    public function can_create_a_link_with_dots_replaced_by_value()
+    {
+        $link = (new Link)->parseLink(['name' => 'pepito', 'id' => 1, 'other' => 'other'], 'http://www.mynamelink.com/{user.name}', "john");
+        $this->assertEquals("http://www.mynamelink.com/john", $link);
     }
 
     /** @test */
@@ -38,4 +47,5 @@ class LinkTransformTest extends TestCase
         $link = (new Link)->parseLink(['name' => 'pepito', 'id' => 1, 'existingOption' => 'cool', 'other' => 'other'], 'http://www.mynamelink.com/{id}/{name}/{unexistingOption||existingOption}');
         $this->assertEquals("http://www.mynamelink.com/1/pepito/cool", $link);
     }
+
 }
