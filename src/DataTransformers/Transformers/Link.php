@@ -31,10 +31,6 @@ class Link implements TransformsRowInterface
         return $this;
     }
 
-    /**
-     * @param $link
-     * @return mixed
-     */
     public function parseLink($link)
     {
         $link           = is_array($link) ? $link['url'] : $link;
@@ -59,11 +55,12 @@ class Link implements TransformsRowInterface
         }, -1);
     }
 
-    private function getAvailableVariableNames($variable){
+    private function getAvailableVariableNames($variable)
+    {
         return collect( explode('||', substr($variable, 1, -1)));
     }
 
-    protected function getDisplayText($transformData)
+    private function getDisplayText($transformData)
     {
         if (isset($transformData['textCallback'])) {
             return $transformData['textCallback']($this->defaultValue);
