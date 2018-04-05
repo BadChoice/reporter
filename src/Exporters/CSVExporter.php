@@ -10,7 +10,8 @@ class CsvExporter extends BaseExporter
 {
     protected $output = '';
 
-    public function __construct($fields, $collection) {
+    public function __construct($fields, $collection)
+    {
         parent::__construct($fields, $collection);
         app()->bind(Currency::class, Decimal::class);
     }

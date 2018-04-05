@@ -2,6 +2,8 @@
 
 namespace BadChoice\Reports\Exporters;
 
+use BadChoice\Reports\DataTransformers\Transformers\Currency;
+use BadChoice\Reports\DataTransformers\Transformers\Decimal;
 use PHPUnit\Framework\Assert;
 
 class FakeExporter extends BaseExporter
@@ -9,6 +11,12 @@ class FakeExporter extends BaseExporter
     public $headers;
     public $rows;
     public static $export_type = 'csv';
+
+    public function __construct($fields, $collection)
+    {
+        parent::__construct($fields, $collection);
+        app()->bind(Currency::class, Decimal::class);
+    }
 
     public static function setExportType($exportType)
     {
