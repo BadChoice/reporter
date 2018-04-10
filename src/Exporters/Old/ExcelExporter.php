@@ -16,7 +16,7 @@ class ExcelExporter extends BaseExporter implements ReportExporter
 
     private function createExcel($name)
     {
-        return Excel::create(auth()->user()->tenant . "-" . $name, function ($excel) {
+        return Excel::create((auth()->user()->tenant ?? auth()->user()->username) . "-" . $name, function ($excel) {
             $excel->sheet('report', function ($sheet) {
                 $this->writeHeader($sheet);
                 $rowPointer = 2;

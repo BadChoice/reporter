@@ -115,7 +115,10 @@ abstract class Report
 
     public function getExportName()
     {
-        $className = rtrim(collect(explode("\\", get_class($this)))->last(), "Report");
+        $className = preg_replace("(Report)", "", (new \ReflectionClass($this))->getShortName());
+        if (! isset($this->filters->filters()["start_date"]) || ! isset($this->filters->filters()["end_date"])) {
+            return $className . "-" . Carbon::today()->toDateString();
+        }
         return $className . "-" . $this->filters->filters()["start_date"] . '-' . $this->filters->filters()["end_date"];
     }
 
