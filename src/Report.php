@@ -115,7 +115,7 @@ abstract class Report
 
     public function getExportName()
     {
-        $className = preg_replace("(Report)", "", (new \ReflectionClass($this))->getShortName());
+        $className = str_replace("Report", "", (new \ReflectionClass($this))->getShortName());
         if (! isset($this->filters->filters()["start_date"]) || ! isset($this->filters->filters()["end_date"])) {
             return $className . "-" . Carbon::today()->toDateString();
         }
