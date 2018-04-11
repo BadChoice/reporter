@@ -13,7 +13,7 @@ class Link implements TransformsRowInterface
     {
         $class              = "";
         $link               = $this->setRow($row, $value)->parseLink($transformData);
-        $text               = $this->value;
+        $text               = $value;
         if (is_array($transformData)) {
             $class = $transformData['class'] ?? "";
             if (isset($transformData['icon'])) {
