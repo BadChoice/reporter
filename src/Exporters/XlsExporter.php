@@ -30,7 +30,7 @@ class XlsExporter extends BaseExporter
     {
         $name       = str_random(25);
         $this->file = Excel::create($name, function ($excel) {
-            $excel->sheet('report', function ($sheet) {
+            $excel->sheet('Report Sheet', function ($sheet) {
             });
         })->store('xls', false, true);
     }
@@ -42,8 +42,8 @@ class XlsExporter extends BaseExporter
 
     public function generate()
     {
-        $this->excel = Excel::load($this->file["full"], function ($excel) {
-            $excel->sheet('report', function ($sheet) {
+        $this->excel = Excel::create($this->file["full"], function ($excel) {
+            $excel->sheet('Report Sheet', function ($sheet) {
                 $this->writeHeader($sheet);
                 $rowPointer = 2;
                 $this->forEachRecord(function ($newRow) use ($sheet, &$rowPointer) {
