@@ -37,7 +37,6 @@ class Filters
     {
         $request        = request();
         $sessionFilters = session('filters') ?? [];
-        $filters        = $request ?  : [];
         $filters        = array_merge($sessionFilters, $request->all());
         session(['filters' => array_only($filters, $this->filtersToKeepInSession)]);
         $this->allFilters = array_merge($filters, $this->extraFilters);
