@@ -92,14 +92,48 @@ class DefaultFilters extends QueryFilters
      */
     public function sort($key, $order = 'desc')
     {
-        if ($this->validSortFields == null || count($this->validSortFields) > 0) {
-            if (array_key_exists($key, $this->validSortFields) || in_array($key, $this->validSortFields)) {
-                if (isset($this->validSortFields[$key])) {
-                    $order = $this->validSortFields[$key];
-                }
-                return $this->builder->orderBy($key, $order);
-            }
+        if ($this->isSortKeyValid($key, $order)) { //Also fills order if necessary
+            return $this->builder->orderBy($key, $order);
         }
+        return $this->applyDefaultSort();
+    }
+
+    //============================================================
+    // SORT HELPERS
+    //============================================================
+    public function applyDefaultSort()
+    {
+        if (! $this->defaultSort) {
+            return $this->builder;
+        }
+
+        if (! is_array($this->defaultSort)) {
+            return $this->builder->orderBy($this->defaultSort);
+        }
+
+        if (count($this->defaultSort) == 1) {
+            return $this->builder->orderBy(key($this->defaultSort), current($this->defaultSort));
+        }
+        collect($this->defaultSort)->each(function ($sort) {
+            $this->builder->orderBy(key($sort), current($sort));
+        });
+        return $this->builder;
+    }
+
+    private function isSortKeyValid($key, &$order)
+    {
+        if ($this->validSortFields == null && $key != $this->defaultSort) {
+            return true;
+        }
+        return (collect($this->validSortFields)->contains(function ($arrayKey, $value) use (&$key, &$order) {
+            if (strtolower($value) == 'desc') {
+                $order = 'desc';
+            }
+            if (strtolower($value) == 'asc') {
+                $order = 'asc';
+            }
+            return ($arrayKey === $key || $value === $key);
+        }));
     }
 
     /**
@@ -118,6 +152,31 @@ class DefaultFilters extends QueryFilters
                 $filters["totalize"] = $this->defaultTotalize;
             }
         }
+        $filters = $this->checkValidTotalize($filters);
+        return $this->setDateFiltersIfNotInSession($filters);
+    }
+
+    private function checkValidTotalize($filters)
+    {
+        if (isset($filters['totalize']) && $filters['totalize'] == 'all') {
+            return $filters;
+        }
+        if (array_key_exists('totalize', $filters) && $this->validTotalize != null) {
+            if (! in_array($filters['totalize'], $this->validTotalize)) {
+                unset($filters['totalize']);
+            }
+        }
+        return $filters;
+    }
+
+    public function setDateFiltersIfNotInSession($filters)
+    {
+        if (! array_key_exists('start_date', $filters) || (array_key_exists('start_date', $filters) && ! $filters["start_date"])) {
+            $filters['start_date'] = Carbon::now()->startOfMonth() ->toDateString();
+        }
+        if (! array_key_exists('end_date', $filters) || (array_key_exists('end_date', $filters) && ! $filters["end_date"])) {
+            $filters['end_date'] =  Carbon::now()->tomorrow()->toDateString() ;
+        }
         return $filters;
     }
 
@@ -125,6 +184,7 @@ class DefaultFilters extends QueryFilters
      * Does a basic where joining the default tablename
      * @param $key
      * @param $value
+     * @param string $comparison
      * @return $this
      */
     protected function where($key, $value, $comparison = "=")
@@ -162,5 +222,10 @@ class DefaultFilters extends QueryFilters
         }
         $this->rawDateField = str_contains($this->dateField, '.') ? DB::getTablePrefix() . $this->dateField : $this->dateField;
         return $this->rawDateField;
+    }
+
+    public function isTotalized()
+    {
+        return $this->valueFor('totalize') != null;
     }
 }

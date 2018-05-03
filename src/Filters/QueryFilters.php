@@ -48,6 +48,14 @@ abstract class QueryFilters
         return $this->builder;
     }
 
+    public function valueFor($key)
+    {
+        if (isset($this->filters()[$key])) {
+            return $this->filters()[$key];
+        }
+        return null;
+    }
+
     /**
      * Get all session & request filters data (saves them all to session['filters']
      * @return array
@@ -68,12 +76,16 @@ abstract class QueryFilters
         return $this;
     }
 
+    /*
+     * @deprecated use addFilter directly
+     */
     public function with($filter, $value = null)
     {
         return $this->addFilter($filter, $value);
     }
 
-    private function isTotalized($name, $totals) {
+    private function isTotalized($name, $totals)
+    {
         return ($totals && $name == 'totalize');
     }
 
