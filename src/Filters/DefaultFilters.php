@@ -189,7 +189,7 @@ class DefaultFilters extends QueryFilters
      */
     protected function where($key, $value, $comparison = "=")
     {
-        if ($value == null) {
+        if ($value === null) {
             return $this->builder;
         }
         if (is_array($value)) {
