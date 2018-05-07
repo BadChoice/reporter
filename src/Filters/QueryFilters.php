@@ -40,10 +40,10 @@ abstract class QueryFilters
             return method_exists($this, $name);
         })->each(function ($value, $name) use ($totals){
             $value = $this->isTotalized($name, $totals) ? 'all' : $value;
-            if ($value && ! empty($value)) {
-                return $this->$name($value);
+            if ($value === null || $value === "") {
+                return $this->$name();
             }
-            return $this->$name();
+            return $this->$name($value);
         });
         return $this->builder;
     }
