@@ -35,21 +35,26 @@ abstract class ReportExporter
 
     public function toHtml($collection)
     {
-        return (new HtmlExporter($this->getFields(), $collection))->export()->print();
+        return (new HtmlExporter($this->fields(), $collection))->export()->print();
     }
 
     public function toXls($collection)
     {
-        return (new XlsExporter($this->getFields(), $collection))->export();
+        return (new XlsExporter($this->fields(), $collection))->export();
     }
 
     public function toCsv($collection)
     {
-        return (new CsvExporter($this->getFields(), $collection))->export();
+        return (new CsvExporter($this->fields(), $collection))->export();
     }
 
     public function toFake($collection)
     {
-        return (new FakeExporter($this->getFields(), $collection))->export();
+        return (new FakeExporter($this->fields(), $collection))->export();
+    }
+
+    protected function fields()
+    {
+        return $this->getFields();
     }
 }
