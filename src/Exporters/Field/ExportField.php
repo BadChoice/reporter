@@ -96,8 +96,10 @@ class ExportField
 
     private function transformMany($row)
     {
-        return collect($this->transformation)->reduce(function ($value, $transformation) use ($row) {
-            return ReportDataTransformer::transform($row, $this->field, $value, $transformation);
-        }, data_get($row, $this->field));
+        $value = data_get($row, $this->field);
+        collect($this->transformation)->each(function($transformationData, $transformation) use($row, &$value){
+            $value = ReportDataTransformer::transform($row, $this->field, $value, $transformation, $transformationData);
+        });
+        return $value;
     }
 }
