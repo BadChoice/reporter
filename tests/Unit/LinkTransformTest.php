@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use BadChoice\Reports\DataTransformers\Transformers\Link;
-use BadChoice\Reports\Exporters\Field\ExportField;
 use PHPUnit\Framework\TestCase;
 
 class LinkTransformTest extends TestCase

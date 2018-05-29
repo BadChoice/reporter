@@ -98,6 +98,9 @@ class ExportField
     {
         $value = data_get($row, $this->field);
         collect($this->transformation)->each(function($transformationData, $transformation) use($row, &$value){
+            if (! is_string($transformation)) {
+                return $value = ReportDataTransformer::transform($row, $this->field, $value, $transformationData);
+            }
             $value = ReportDataTransformer::transform($row, $this->field, $value, $transformation, $transformationData);
         });
         return $value;
