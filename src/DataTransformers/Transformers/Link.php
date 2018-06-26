@@ -11,17 +11,18 @@ class Link implements TransformsRowInterface
 
     public function transformRow($field, $row, $value, $transformData)
     {
-        $class              = "";
-        $link               = $this->setRow($row, $value)->parseLink($transformData);
-        $text               = $value;
+        $class      = "";
+        $link       = $this->setRow($row, $value)->parseLink($transformData);
+        $text       = $value;
+        $attributes = $transformData['attributes'] ?? "";
         if (is_array($transformData)) {
             $class = $transformData['class'] ?? "";
             if (isset($transformData['icon'])) {
-                return "<a class='{$class}' href='" . url($link) . "' style='font-size:15px'> " . icon($transformData['icon']) . "</a>";
+                return "<a {$attributes} class='{$class}' href='" . url($link) . "' style='font-size:15px'> " . icon($transformData['icon']) . "</a>";
             }
             $text = $this->getDisplayText($transformData);
         }
-        return "<a class='{$class}' href='" . url($link) . "'>{$text}</a>";
+        return "<a {$attributes} class='{$class}' href='" . url($link) . "'>{$text}</a>";
     }
 
     public function setRow($row, $defaultValue = null)
