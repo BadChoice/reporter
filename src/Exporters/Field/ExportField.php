@@ -106,7 +106,7 @@ class ExportField
         return $value;
     }
 
-    public function shouldAlignRight()
+    public function isNumeric()
     {
         return in_array($this->transformation, ["decimal", "percentage", "currency"]);
     }
