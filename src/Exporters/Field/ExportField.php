@@ -105,4 +105,9 @@ class ExportField
         });
         return $value;
     }
+
+    public function isNumeric()
+    {
+        return in_array($this->transformation, ["decimal", "percentage", "currency"]);
+    }
 }
