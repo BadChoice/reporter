@@ -36,6 +36,9 @@ class HtmlExporter extends BaseExporter
         $params = http_build_query(Filters::all());
         $this->output .= $this->getExportFields()->reduce(function ($carry, $field) use ($params) {
             $classes = $field->hideMobile ? "hide-mobile" : "";
+            if ($field->isNumeric())  {
+                $classes = "{$classes} text-right";
+            }
             if (! $field->sortable) {
                 return $carry . "<th class='{$classes}'>{$field->getTitle()}</th>";
             }
