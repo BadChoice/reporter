@@ -34,15 +34,15 @@ class CsvExporter extends BaseExporter
     private function getHeaders($title)
     {
         return [
-            'Content-Type'        => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="'.$title.'.csv"',
+            'Content-Type'        => 'application/csv; charset=UTF-8',
+            'Content-Encoding'    => 'UTF-8',
+            'Content-Disposition' => "attachment; filename='{$title}.csv'",
         ];
     }
 
     private function makeResponse($title)
     {
-        $output = mb_convert_encoding(rtrim($this->output, "\n"), 'UCS-2LE', 'UTF-8');
-        return Response::make($output, 200, $this->getHeaders($title));
+        return Response::make(rtrim($this->output, "\n"), 200, $this->getHeaders($title));
     }
 
     public function init()
