@@ -92,6 +92,7 @@ class DefaultFilters extends QueryFilters
      */
     public function sort($key, $order = 'desc')
     {
+        $order = request('sort_order') ?? 'desc';
         if ($this->isSortKeyValid($key, $order)) { //Also fills order if necessary
             return $this->builder->orderBy($key, $order);
         }

@@ -43,7 +43,7 @@ class HtmlExporter extends BaseExporter
                 return $carry . "<th class='{$classes}'>{$field->getTitle()}</th>";
             }
             $url = QueryUrl::addQueryToUrl(request()->url() . "?{$params}", ["sort" => $field->field]);
-            return $carry . "<th class='{$classes}'><a href='{$url}'>{$field->getTitle()}</a></th>";
+            return $carry . "<th class='{$classes}'>{$field->getTitle()}<a href='{$url}&sort_order=desc'>▲</a>  <a href='{$url}&sort_order=asc'>▼</a></th>";
         }, "<thead class='sticky'><tr>");
         $this->output .= "</tr></thead>";
     }
