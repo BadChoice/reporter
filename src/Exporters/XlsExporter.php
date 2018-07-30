@@ -13,6 +13,7 @@ class XlsExporter extends BaseExporter
 
     public function __construct($fields, $collection) {
         parent::__construct($fields, $collection);
+        app()->bind(Decimal::class, SheetDecimal::class);
         app()->bind(Currency::class, Decimal::class);
     }
 
