@@ -13,6 +13,6 @@ class Decimal implements TransformsValueInterface
         if (static::$commaDecimal) {
             return number_format($value, 2, ',', '.');
         }
-      	return number_format($value, 2);
-      }
+        return number_format($value, 2, '.', ',');
+    }
 }
