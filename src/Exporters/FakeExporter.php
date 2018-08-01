@@ -4,6 +4,7 @@ namespace BadChoice\Reports\Exporters;
 
 use BadChoice\Reports\DataTransformers\Transformers\Currency;
 use BadChoice\Reports\DataTransformers\Transformers\Decimal;
+use BadChoice\Reports\DataTransformers\Transformers\SheetDecimal;
 use PHPUnit\Framework\Assert;
 
 class FakeExporter extends BaseExporter

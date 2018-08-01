@@ -4,6 +4,7 @@ namespace BadChoice\Reports\Exporters;
 
 use BadChoice\Reports\DataTransformers\Transformers\Currency;
 use BadChoice\Reports\DataTransformers\Transformers\Decimal;
+use BadChoice\Reports\DataTransformers\Transformers\SheetDecimal;
 use Maatwebsite\Excel\Facades\Excel;
 
 class XlsExporter extends BaseExporter
