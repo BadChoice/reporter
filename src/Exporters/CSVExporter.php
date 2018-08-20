@@ -38,7 +38,7 @@ class CsvExporter extends BaseExporter
         return [
             'Content-Type'        => 'application/csv; charset=UTF-8',
             'Content-Encoding'    => 'UTF-8',
-            'Content-Disposition' => "attachment; filename='{$title}.csv'",
+            'Content-Disposition' => 'attachment; filename="' . $title . '.csv"',  // Safari filename must be between commas
         ];
     }
 
