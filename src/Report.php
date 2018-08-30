@@ -8,6 +8,7 @@ use Carbon\Carbon;
 
 abstract class Report
 {
+    public $filters;
     protected $filtersClass     = DefaultFilters::class;
     protected $exportColumns    = [];
     protected $exportTitles     = [];
@@ -20,7 +21,7 @@ abstract class Report
 
     public function __construct($filters = null)
     {
-        $this->filters = $filters ? : new $this->filtersClass(request());
+        $this->filters = $filters ? : app($this->filtersClass, request()->toArray());
     }
 
     /**
@@ -128,13 +129,13 @@ abstract class Report
             return $this->download();   //TODO: Remove this, this is used for the UsersReport that doesn't have exporter yet
         }
         if ($type == 'xls') {
-            return (new $this->reportExporter)->toXls($this->query())->download($this->getExportName());
+            return app($this->reportExporter)->toXls($this->query())->download($this->getExportName());
         } elseif ($type == 'html') {
-            return (new $this->reportExporter)->toHtml($this->query()->paginate(50));
+            return app($this->reportExporter)->toHtml($this->query()->paginate(50));
         } elseif ($type == 'fake') {
             return (new $this->reportExporter($this->getFilters()))->toFake($this->query()->get());
         }
-        return (new $this->reportExporter)->toCsv($this->query())->download($this->getExportName());
+        return app($this->reportExporter)->toCsv($this->query())->download($this->getExportName());
     }
 
     public function getTransformations()
