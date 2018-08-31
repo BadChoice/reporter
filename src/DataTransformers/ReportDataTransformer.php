@@ -4,6 +4,14 @@ namespace BadChoice\Reports\DataTransformers;
 
 class ReportDataTransformer
 {
+    public static function make($type)
+    {
+        if (! class_exists(static::getTransformer($type))) {
+            return null;
+        }
+        return app(static::getTransformer($type));
+    }
+
     public static function transform($row, $field, $value, $transformation, $transformData = null)
     {
         $transformed = static::applyTransformation($row, $field, $value, $transformation, $transformData);
@@ -22,7 +30,7 @@ class ReportDataTransformer
     public static function applyTransformation($row, $field, $value, $transformation, $transformData)
     {
         try {
-            $transformer = app(static::getTransformer(ucFirst($transformation)));
+            $transformer = app(static::getTransformer($transformation));
         } catch(\Exception $e) {
             return $value;
         }
