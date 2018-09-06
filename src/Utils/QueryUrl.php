@@ -21,7 +21,8 @@ class QueryUrl
     protected function findBaseUrl($url)
     {
         $url_components = parse_url($url);
-        return $url_components["scheme"] . "://" . $url_components["host"] . ($url_components["path"] ?? '');
+        $port = isset($url_components["port"]) ?  ":". $url_components["port"] : "";
+        return $url_components["scheme"] . "://" . $url_components["host"]  . $port . ($url_components["path"] ?? '');
     }
 
     protected function findQuery($url)
@@ -30,7 +31,7 @@ class QueryUrl
         if (! isset($url_components["query"]) || empty($url_components["query"])) {
             return [];
         }
-        parse_str($url_components["query"], $queryArray);    //Converts a=b&c=d to [a => “b”, c => “d”]
+        parse_str($url_components["query"], $queryArray);    //Converts a=b&c=d to [a => "b", c => "d"]
         return $queryArray;
     }
 
