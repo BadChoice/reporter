@@ -14,24 +14,19 @@ class QueryUrl
 
     public function __construct($url)
     {
-        $this->url   = $this->findBaseUrl($url);
+        $this->url   = $this->getUrlWithoutQuery($url);
         $this->query = $this->findQuery($url);
     }
 
-    protected function findBaseUrl($url)
+    protected function getUrlWithoutQuery($url)
     {
-        $url_components = parse_url($url);
-        $port = isset($url_components["port"]) ?  ":". $url_components["port"] : "";
-        return $url_components["scheme"] . "://" . $url_components["host"]  . $port . ($url_components["path"] ?? '');
+        $query = parse_url($url)['query'] ?? "";
+        return str_replace(array($query, '?'), '', $url);
     }
 
     protected function findQuery($url)
     {
-        $url_components = parse_url($url);
-        if (! isset($url_components["query"]) || empty($url_components["query"])) {
-            return [];
-        }
-        parse_str($url_components["query"], $queryArray);    //Converts a=b&c=d to [a => "b", c => "d"]
+        parse_str(parse_url($url)["query"] ?? "", $queryArray);
         return $queryArray;
     }
 
@@ -71,7 +66,8 @@ class QueryUrl
         return $query;
     }
 
-    private function generateMultipleQueryString($key, $values) {
+    private function generateMultipleQueryString($key, $values)
+    {
         return collect($values)->map(function($value) use($key){
             return "{$key}[]={$value}";
         })->implode("&");
