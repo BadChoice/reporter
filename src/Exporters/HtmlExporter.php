@@ -42,8 +42,8 @@ class HtmlExporter extends BaseExporter
             if (! $field->sortable) {
                 return $carry . "<th class='{$classes}'>{$field->getTitle()}</th>";
             }
-            $url = QueryUrl::addQueryToUrl(request()->url() . "?{$params}", ["sort" => $field->field]);
-            return $carry . "<th class='{$classes}'>{$field->getTitle()}<div class='sortArrows'><a href='{$url}&sort_order=desc' class='sortUp'>▲</a>  <a href='{$url}&sort_order=asc' class='sortDown'>▼</a></div></th>";
+            $url = QueryUrl::addQueryToUrl(request()->url() . "?{$params}", ["sort" => $field->sortable !== true ? $field->sortable : $field->field]);
+            return $carry . "<th class='{$classes}'><div class='flexContainer'>{$field->getTitle()}<div class='sortArrows'><a href='{$url}&sort_order=desc' class='sortUp'>▲</a><a href='{$url}&sort_order=asc' class='sortDown'>▼</a></div></div></th>";
         }, "<thead class='sticky'><tr>");
         $this->output .= "</tr></thead>";
     }
