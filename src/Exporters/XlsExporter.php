@@ -59,21 +59,26 @@ class XlsExporter extends BaseExporter
 
     private function writeHeader($sheet)
     {
+        $letter = "A";
         $this->getExportFields()->each(function ($field) use (&$letter, $sheet) {
-            $letter = isset($letter) ? ++$letter : "A";
-            if ($field->isNumeric()) {
-                $sheet->setColumnFormat([$letter => "0.00"]);
-                $sheet->setColumnFormat(["{$letter}1" => ""]);
-            }
-            $sheet->getStyle("{$letter}1")->getFont()->setColor( new PHPExcel_Style_Color("ea5b2e"  ) );
-            $sheet->setCellValue("{$letter}1", $field->getTitle());
+            $this->formatExcelField($field, $letter, $sheet);
         });
         $sheet->freezeFirstRow();
-        $sheet->setAutoFilter();
         $sheet->getStyle("A1:{$letter}1")->getFont()->setBold( true );
         $sheet->cells("A1:{$letter}1", function($cells) {
             $cells->setBackground('#282223');
         });
+    }
+
+    private function formatExcelField($field, &$letter, $sheet)
+    {
+        if ($field->isNumeric()) {
+            $sheet->setColumnFormat([$letter => "0.00"]);
+            $sheet->setColumnFormat(["{$letter}1" => ""]);
+        }
+        $sheet->getStyle("{$letter}1")->getFont()->setColor(new PHPExcel_Style_Color("ea5b2e"));
+        $sheet->setCellValue("{$letter}1", $field->getTitle());
+        ++$letter;
     }
 
     private function writeRecordToSheet($rowPointer, $record, $sheet)
