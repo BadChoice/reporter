@@ -6,6 +6,7 @@ use BadChoice\Reports\DataTransformers\Transformers\Currency;
 use BadChoice\Reports\DataTransformers\Transformers\Decimal;
 use BadChoice\Reports\DataTransformers\Transformers\SheetDecimal;
 use Maatwebsite\Excel\Facades\Excel;
+use PHPExcel_Style_Color;
 
 class XlsExporter extends BaseExporter
 {
@@ -59,9 +60,25 @@ class XlsExporter extends BaseExporter
     private function writeHeader($sheet)
     {
         $letter = "A";
-        foreach ($this->getExportFields() as $field) {
-            $sheet->setCellValue($letter++ . 1, $field->getTitle());
+        $this->getExportFields()->each(function ($field) use (&$letter, $sheet) {
+            $this->formatExcelField($field, $letter, $sheet);
+        });
+        $sheet->freezeFirstRow();
+        $sheet->getStyle("A1:{$letter}1")->getFont()->setBold( true );
+        $sheet->cells("A1:{$letter}1", function($cells) {
+            $cells->setBackground('#282223');
+        });
+    }
+
+    private function formatExcelField($field, &$letter, $sheet)
+    {
+        if ($field->isNumeric()) {
+            $sheet->setColumnFormat([$letter => "0.00"]);
+            $sheet->setColumnFormat(["{$letter}1" => ""]);
         }
+        $sheet->getStyle("{$letter}1")->getFont()->setColor(new PHPExcel_Style_Color("ea5b2e"));
+        $sheet->setCellValue("{$letter}1", $field->getTitle());
+        ++$letter;
     }
 
     private function writeRecordToSheet($rowPointer, $record, $sheet)
