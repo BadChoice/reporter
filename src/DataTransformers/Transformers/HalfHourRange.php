@@ -12,7 +12,10 @@ class HalfHourRange implements TransformsValueInterface
         $time       = Carbon::parse($value)->timezone(auth()->user()->timezone);
         $hour       = $this->fixHourIfBiggerThan23($time->hour);
         $endHour    = $this->fixHourIfMinutesBiggerThan30($time->minute, $hour);
-        return $this->parseHour($hour) . ':30-' . $this->parseHour($endHour) . ':00';
+        if ($time->minute > 30) {
+            return $this->parseHour($hour) . ':30-' . $this->parseHour($endHour) . ':00';
+        }
+        return $this->parseHour($hour) . ':00-' . $this->parseHour($endHour) . ':30';
     }
 
     private function fixHourIfBiggerThan23($hour)
