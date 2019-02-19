@@ -138,6 +138,16 @@ abstract class Report
         return app($this->reportExporter)->toCsv($this->query())->download($this->getExportName());
     }
 
+    public function getExporterHeader()
+    {
+        return explode("\n", app($this->reportExporter)->toCsv($this->query())->getOutput())[0] . "\n";
+    }
+
+    public function getExporterBody()
+    {
+        return explode("\n", app($this->reportExporter)->toCsv($this->query())->getOutput(), 2)[1];
+    }
+
     public function getTransformations()
     {
         return [];
