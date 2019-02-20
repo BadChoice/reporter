@@ -70,15 +70,15 @@ abstract class Report
     public function forDates($start, $end = null)
     {
         $start = Carbon::parse($start)->toDateString();
-        $this->filters->addFilter("start_date", $start);
-        $this->filters->addFilter("end_date", $end ? Carbon::parse($end)->toDateString() : $start);
+        $this->filters->addFilter('start_date', $start);
+        $this->filters->addFilter('end_date', $end ? Carbon::parse($end)->toDateString() : $start);
         return $this;
     }
 
     public function getFilters($parent_id = null)
     {
         if ($this->totalize) {
-            $this->filters->addFilter("totalize", $this->totalize);
+            $this->filters->addFilter('totalize', $this->totalize);
         }
         return $this->filters;
     }
@@ -96,6 +96,14 @@ abstract class Report
     {
         $this->exporter = $exporter;
         return $this;
+    }
+
+    public function getExporter($filters = false)
+    {
+        if ($filters) {
+            return new $this->reportExporter($filters);
+        }
+        return app($this->reportExporter);
     }
 
     /** @deprecated
@@ -116,11 +124,11 @@ abstract class Report
 
     public function getExportName()
     {
-        $className = str_replace("Report", "", (new \ReflectionClass($this))->getShortName());
-        if (! isset($this->filters->filters()["start_date"]) || ! isset($this->filters->filters()["end_date"])) {
-            return $className . "-" . Carbon::today()->toDateString();
+        $className = str_replace('Report', '', (new \ReflectionClass($this))->getShortName());
+        if (! isset($this->filters->filters()['start_date']) || ! isset($this->filters->filters()['end_date'])) {
+            return $className . '-' . Carbon::today()->toDateString();
         }
-        return $className . "-" . $this->filters->filters()["start_date"] . '-' . $this->filters->filters()["end_date"];
+        return $className . '-' . $this->filters->filters()['start_date'] . '-' . $this->filters->filters()['end_date'];
     }
 
     public function export($type = 'xls')
@@ -129,23 +137,13 @@ abstract class Report
             return $this->download();   //TODO: Remove this, this is used for the UsersReport that doesn't have exporter yet
         }
         if ($type == 'xls') {
-            return app($this->reportExporter)->toXls($this->query())->download($this->getExportName());
+            return $this->getExporter()->toXls($this->query())->download($this->getExportName());
         } elseif ($type == 'html') {
-            return app($this->reportExporter)->toHtml($this->query()->paginate(50));
+            return $this->getExporter()->toHtml($this->query()->paginate(50));
         } elseif ($type == 'fake') {
-            return (new $this->reportExporter($this->getFilters()))->toFake($this->query()->get());
+            return $this->getExporter($this->getFilters())->toFake($this->query()->get());
         }
-        return app($this->reportExporter)->toCsv($this->query())->download($this->getExportName());
-    }
-
-    public function getExporterHeader()
-    {
-        return explode("\n", app($this->reportExporter)->toCsv($this->query())->getOutput())[0] . "\n";
-    }
-
-    public function getExporterBody()
-    {
-        return explode("\n", app($this->reportExporter)->toCsv($this->query())->getOutput(), 2)[1];
+        return $this->getExporter()->toCsv($this->query())->download($this->getExportName());
     }
 
     public function getTransformations()
@@ -156,22 +154,22 @@ abstract class Report
     protected function getTransformDates()
     {
         return [
-            "created_at"    => function ($value) {
+            'created_at'    => function ($value) {
                 return $this->datetimeTransform($value);
             },
-            "opened"        => function ($value) {
+            'opened'        => function ($value) {
                 return $this->datetimeTransform($value);
             },
-            "closed"        => function ($value) {
+            'closed'        => function ($value) {
                 return $this->datetimeTransform($value);
             },
-            "canceled"      => function ($value) {
+            'canceled'      => function ($value) {
                 return $this->datetimeTransform($value);
             },
-            "order.opened"  => function ($value) {
+            'order.opened'  => function ($value) {
                 return $this->datetimeTransform($value);
             },
-            "order.closed"  => function ($value) {
+            'order.closed'  => function ($value) {
                 return $this->datetimeTransform($value);
             },
         ];
