@@ -42,6 +42,17 @@ class CsvExporter extends BaseExporter
         ];
     }
 
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    public function setOutput($output)
+    {
+        $this->output = $output;
+        return $this;
+    }
+
     private function makeResponse($title)
     {
         return Response::make(rtrim($this->output, "\n"), 200, $this->getHeaders($title));
