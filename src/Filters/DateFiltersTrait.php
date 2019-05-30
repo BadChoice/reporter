@@ -38,18 +38,20 @@ trait DateFiltersTrait
         return $this->builder->where($this->dateField, '<', $date);
     }
 
-    public function dayOfWeek($dayOfWeek = null)
+    public function dayOfWeek($weekdays = null)
     {
-        if (! $this->dateField || ! $this->validDayOfWeek($dayOfWeek)) {
+        $validWeekDays = $this->validWeekdays($weekdays);
+        if (! $this->dateField || ! $validWeekDays) {
             return $this->builder;
         }
-        $whereMethod = is_array($dayOfWeek) ? "whereIn" : "where";
-        return $this->builder->$whereMethod(DB::raw("dayofweek(" . $this->rawDateField() . ")"), $dayOfWeek);
+        return $this->where(DB::raw("dayofweek(" . $this->rawDateField() . ")"), $validWeekDays);
     }
 
-    public function validDayOfWeek($dayOfWeek)
+    public function validWeekdays($weekdays)
     {
-        return $dayOfWeek != null && $dayOfWeek > 0 && $dayOfWeek < 8;
+        return collect($weekdays)->reject(null)->filter(function ($weekday) {
+            return $weekday > 0 && $weekday < 8;
+        });
     }
 
     public function start_time($time = null)
