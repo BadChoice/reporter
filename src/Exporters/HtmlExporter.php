@@ -43,7 +43,7 @@ class HtmlExporter extends BaseExporter
                 return $carry . "<th class='{$classes}'>{$field->getTitle()}</th>";
             }
             $url = QueryUrl::addQueryToUrl(request()->url() . "?{$params}", ["sort" => $field->sortable !== true ? $field->sortable : $field->field]);
-            return $carry . "<th class='{$classes}'><div class='sortableHeader" . ($field->isNumeric() ? "Right" : "") . "'>{$field->getTitle()}<div class='sortArrows'><a href='{$url}&sort_order=desc' class='sortUp'>▲</a><a href='{$url}&sort_order=asc' class='sortDown'>▼</a></div></div></th>";
+            return $carry . "<th class='{$classes}'><div class='sortableHeader " . ($field->isNumeric() ? "sortableHeaderRight" : "") . "'>{$field->getTitle()}<div class='sortArrows'><a href='{$url}&sort_order=desc' class='sortUp'>▲</a><a href='{$url}&sort_order=asc' class='sortDown'>▼</a></div></div></th>";
         }, "<thead class='sticky'><tr>");
         $this->output .= "</tr></thead>";
     }
@@ -56,7 +56,7 @@ class HtmlExporter extends BaseExporter
             foreach ($this->getExportFields() as $field) {
                 $classes = $field->hideMobile ? "hide-mobile" : "";
                 $value = $field->getValue($row);
-                if ($field->isNumeric() || is_numeric($value))  {
+                if ($field->isNumeric())  {
                     $classes = "{$classes} text-right";
                 }
                 $this->output .= "<td class='{$classes}'>{$value}</td>";
