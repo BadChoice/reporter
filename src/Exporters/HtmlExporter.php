@@ -56,7 +56,7 @@ class HtmlExporter extends BaseExporter
             foreach ($this->getExportFields() as $field) {
                 $classes = $field->hideMobile ? "hide-mobile" : "";
                 $value = $field->getValue($row);
-                if ($field->isNumeric() || is_numeric($value))  {
+                if ($field->isNumeric())  {
                     $classes = "{$classes} text-right";
                 }
                 $this->output .= "<td class='{$classes}'>{$value}</td>";
