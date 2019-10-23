@@ -18,7 +18,6 @@ class Filters
     protected $filtersToKeepInSession = [
         "start_date",
         "end_date",
-        "tag"
     ];
 
     public static function all()
