@@ -100,10 +100,11 @@ abstract class Report
 
     public function getExporter($filters = false)
     {
+        $exporter = app($this->reportExporter);
         if ($filters) {
-            return new $this->reportExporter($filters);
+            $exporter->setFilters($filters);
         }
-        return app($this->reportExporter);
+        return $exporter;
     }
 
     /** @deprecated
