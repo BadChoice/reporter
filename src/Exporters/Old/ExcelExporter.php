@@ -16,7 +16,8 @@ class ExcelExporter extends BaseExporter implements ReportExporter
 
     private function createExcel($name)
     {
-        return Excel::create((auth()->user()->tenant ?? auth()->user()->username) . "-" . $name, function ($excel) {
+        // TODO: Això no va.
+        return Excel::download(function ($excel) {
             $excel->sheet('report', function ($sheet) {
                 $this->writeHeader($sheet);
                 $rowPointer = 2;
@@ -25,7 +26,7 @@ class ExcelExporter extends BaseExporter implements ReportExporter
                     $rowPointer++;
                 });
             });
-        })->store('xls', false, true);
+        }, (auth()->user()->tenant ?? auth()->user()->username) . "-" . $name);
     }
 
     private function writeHeader($sheet)
