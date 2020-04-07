@@ -9,7 +9,6 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
-use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
@@ -21,7 +20,7 @@ class BaseExport implements WithTitle, WithMapping, FromQuery, WithHeadings, Wit
 
     public function __construct($query, $mapping)
     {
-        $this->query = $query;
+        $this->query   = $query;
         $this->mapping = $mapping;
     }
 
@@ -53,7 +52,7 @@ class BaseExport implements WithTitle, WithMapping, FromQuery, WithHeadings, Wit
             if ($exportField->isPercentage()) {
                 return $this->stringToFloat($exportField->getValue($product)) / 100.0;
             }
-            if ($exportField->isNumeric()){
+            if ($exportField->isNumeric()) {
                 return $this->stringToFloat($exportField->getValue($product));
             }
             return $exportField->getValue($product);
@@ -104,17 +103,6 @@ class BaseExport implements WithTitle, WithMapping, FromQuery, WithHeadings, Wit
                     'argb' => '282223',
                 ],
             ],
-        ];
-    }
-
-    private function getNumericStyleArray() {
-//        $sheet->setColumnFormat([$letter => "0.00"]);
-//        $sheet->setColumnFormat(["{$letter}1" => ""]);
-        return [
-//            'numberFormat' => [
-                'code' =>
-                 NumberFormat::FORMAT_NUMBER_00
-//            ]
         ];
     }
 }
