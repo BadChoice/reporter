@@ -108,6 +108,15 @@ class ExportField
 
     public function isNumeric()
     {
-        return collect($this->transformation)->keys()->intersect(["decimal", "percentage", "currency", "numeric"])->count() > 0;
+        return collect($this->transformation)->values()->filter(function ($value) {
+            return is_string($value);
+        })->intersect(["decimal", "percentage", "currency", "numeric"])->count() > 0;
+    }
+
+    public function isPercentage()
+    {
+        return collect($this->transformation)->values()->filter(function ($value) {
+            return is_string($value);
+        })->intersect(["percentage"])->count() > 0;
     }
 }
