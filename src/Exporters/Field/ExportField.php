@@ -31,6 +31,10 @@ class ExportField
         return $field;
     }
 
+    function ignoreWhenTotalizedExcept($totalize, $except){
+        return $this->ignoreWhen($totalize && !collect($except)->contains($totalize));
+    }
+
     public function ignoreWhen($shouldIgnore)
     {
         $this->shouldIgnore = $shouldIgnore;
