@@ -64,22 +64,22 @@ class FakeExporter extends BaseExporter
     public function assertHasHeaders($titles)
     {
         if (is_string($titles)) {
-            Assert::assertContains(strtolower($titles), strtolower($this->headers), "The header doesn't contains {$titles}");
+            Assert::assertStringContainsString(strtolower($titles), strtolower($this->headers), "The header doesn't contains {$titles}");
             return;
         }
         collect($titles)->each(function ($title) {
-            Assert::assertContains(strtolower($title), strtolower($this->headers), "The header doesn't contains {$title}");
+            Assert::assertStringContainsString(strtolower($title), strtolower($this->headers), "The header doesn't contains {$title}");
         });
     }
 
     public function assertDoesNotHaveHeaders($titles)
     {
         if (is_string($titles)) {
-            Assert::assertNotContains(strtolower($titles), strtolower($this->headers), "The header contains {$titles}");
+            Assert::assertStringNotContainsString(strtolower($titles), strtolower($this->headers), "The header contains {$titles}");
             return;
         }
         collect($titles)->each(function ($title) {
-            Assert::assertNotContains(strtolower($title), strtolower($this->headers), "The header contains {$title}");
+            Assert::assertStringNotContainsString(strtolower($title), strtolower($this->headers), "The header contains {$title}");
         });
     }
 
