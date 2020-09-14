@@ -3,6 +3,7 @@
 namespace BadChoice\Reports\Exporters\Old;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class BaseExporter
 {
@@ -89,7 +90,7 @@ class BaseExporter
 
     protected function convertNumberIfNecessary($value)
     {
-        if (is_numeric($value) && str_contains($value, ".")) {
+        if (is_numeric($value) && Str::contains($value, ".")) {
             return static::commaNumber($value);
         }
         return $value;
