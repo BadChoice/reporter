@@ -4,6 +4,7 @@ namespace BadChoice\Reports\Filters;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DefaultFilters extends QueryFilters
 {
@@ -221,7 +222,7 @@ class DefaultFilters extends QueryFilters
         if ($this->rawDateField) {
             return $this->rawDateField;
         }
-        $this->rawDateField = str_contains($this->dateField, '.') ? DB::getTablePrefix() . $this->dateField : $this->dateField;
+        $this->rawDateField = Str::contains($this->dateField, '.') ? DB::getTablePrefix() . $this->dateField : $this->dateField;
         return $this->rawDateField;
     }
 
