@@ -2,7 +2,7 @@
 
 namespace BadChoice\Reports\Exporters;
 
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 abstract class BaseExporter
 {

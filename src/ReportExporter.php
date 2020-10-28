@@ -2,6 +2,7 @@
 
 namespace BadChoice\Reports;
 
+use BadChoice\Reports\Exporters\ApiExporter;
 use BadChoice\Reports\Exporters\FakeExporter;
 use BadChoice\Reports\Exporters\HtmlExporter;
 use BadChoice\Reports\Exporters\CsvExporter;
@@ -36,6 +37,11 @@ abstract class ReportExporter
     public function toHtml($collection)
     {
         return (new HtmlExporter($this->fields(), $collection))->export()->print();
+    }
+
+    public function toApi($collection)
+    {
+        return (new ApiExporter($this->fields(), $collection))->export();
     }
 
     public function toXls($collection)
