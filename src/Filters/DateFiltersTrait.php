@@ -13,14 +13,14 @@ trait DateFiltersTrait
             return $this->builder;
         }
         $date = $date ? : Carbon::today()->toDateString();
-        $dt  = Carbon::parse($date . " " . $this->openingTime);
-        $dt2 = Carbon::parse($date . " " . $this->openingTime)->addDay();
+        $dt  = Carbon::parse($date . " " . $this->openingTime)->subHours($this->offsetHours);
+        $dt2 = Carbon::parse($date . " " . $this->openingTime)->subHours($this->offsetHours)->addDay();
         return $this->builder->whereBetween($this->dateField, [$dt, $dt2]);
     }
 
     public function start_date($date = null)
     {
-        if (! $this->dateField) {
+        if (! $this->dateField || isset($this->filters()['date'])) {
             return $this->builder;
         }
         $date = $date ? : Carbon::parse('first day of this month')->toDateString();
@@ -30,7 +30,7 @@ trait DateFiltersTrait
 
     public function end_date($date = null)
     {
-        if (! $this->dateField) {
+        if (! $this->dateField || isset($this->filters()['date'])) {
             return $this->builder;
         }
         $date = $date ? : Carbon::today()->toDateString();
