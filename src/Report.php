@@ -107,22 +107,6 @@ abstract class Report
         return $exporter;
     }
 
-    /** @deprecated
-     * We are using exporters now
-     */
-    public function download($parent_id = null)
-    {
-        if (! $this->exporter) {
-            $this->exporter = new ExcelExporter();
-        }
-        return $this->exporter->set(
-            $this->query($parent_id),
-            $this->exportFields,
-            array_merge($this->getTransformDates(), $this->getTransformations())
-        )
-            ->download($this->getExportName());
-    }
-
     public function getExportName()
     {
         $className = str_replace('Report', '', (new \ReflectionClass($this))->getShortName());
@@ -132,19 +116,21 @@ abstract class Report
         return $className . '-' . $this->filters->filters()['start_date'] . '-' . $this->filters->filters()['end_date'];
     }
 
-    public function export($type = 'xls')
+    public function export($type = 'xls', $pagination = 50)
     {
-        if (! $this->reportExporter) {
-            return $this->download();   //TODO: Remove this, this is used for the UsersReport that doesn't have exporter yet
-        }
         if ($type == 'xls') {
             return $this->getExporter()->toXls($this->query())->download($this->getExportName());
         } elseif ($type == 'html') {
-            return $this->getExporter()->toHtml($this->query()->paginate(50));
+            return $this->getExporter()->toHtml($this->query()->paginate($pagination));
         } elseif ($type == 'fake') {
             return $this->getExporter($this->getFilters())->toFake($this->query()->get());
         }
         return $this->getExporter()->toCsv($this->query())->download($this->getExportName());
+    }
+
+    public function toApi($pagination = 50, $appends = [])
+    {
+        return $this->getExporter()->toApi($this->query()->paginate($pagination)->appends($appends));
     }
 
     public function getTransformations()
