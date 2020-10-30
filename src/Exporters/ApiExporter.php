@@ -31,7 +31,7 @@ class ApiExporter extends BaseExporter
     {
         $this->collection->getCollection()->transform(function($item, $key) {
             return $this->getExportFields()->mapWithKeys(function ($field) use (&$item) {
-                return [$field->getTitle() ? : $field->field => $field->getValue($item)];
+                return [$this->getFieldTitle($field) => $field->getValue($item)];
             });
         });
     }
@@ -39,5 +39,12 @@ class ApiExporter extends BaseExporter
     protected function getType()
     {
         return 'api';
+    }
+
+    protected function getFieldTitle($field)
+    {
+        return collect(explode('_', str_replace(['/', ' ', '.', ','], "_", $field->getTitle())))->map(function ($word) {
+            return ctype_upper($word) ? strtolower($word) : snake_case($word);
+        })->implode('_');
     }
 }

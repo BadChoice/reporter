@@ -2,8 +2,6 @@
 
 namespace BadChoice\Reports\Exporters;
 
-use Illuminate\Database\Eloquent\Builder;
-
 abstract class BaseExporter
 {
     protected $fields;
@@ -21,7 +19,7 @@ abstract class BaseExporter
     public function __construct($fields, $collection)
     {
         $this->fields       = collect($fields);
-        if ($collection instanceof Builder) {
+        if ($collection instanceof Illuminate\Database\Eloquent\Builder || $collection instanceof Illuminate\Database\Query\Builder) {
             $this->query = $collection;
         } else {
             $this->collection = $collection;
