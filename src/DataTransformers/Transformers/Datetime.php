@@ -12,6 +12,6 @@ class Datetime implements TransformsValueInterface
         if (! $value) {
             return "--";
         }
-        return timeZoned(Carbon::parse($value));
+        return timeZoned(Carbon::parse($value))->toDateTimeString();
     }
 }

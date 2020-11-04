@@ -95,7 +95,7 @@ class ExportField
         if(is_array($this->transformation)){
             return $this->transformMany($row);
         }
-        return ReportDataTransformer::transform($row, $this->field, data_get($row,$this->field), $this->transformation, $this->transformationData);
+        return app(ReportDataTransformer::class)::transform($row, $this->field, data_get($row,$this->field), $this->transformation, $this->transformationData);
     }
 
     private function transformMany($row)
@@ -103,9 +103,9 @@ class ExportField
         $value = data_get($row, $this->field);
         collect($this->transformation)->each(function($transformationData, $transformation) use($row, &$value){
             if (! is_string($transformation)) {
-                return $value = ReportDataTransformer::transform($row, $this->field, $value, $transformationData);
+                return $value = app(ReportDataTransformer::class)::transform($row, $this->field, $value, $transformationData);
             }
-            $value = ReportDataTransformer::transform($row, $this->field, $value, $transformation, $transformationData);
+            $value = app(ReportDataTransformer::class)::transform($row, $this->field, $value, $transformation, $transformationData);
         });
         return $value;
     }
