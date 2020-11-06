@@ -2,6 +2,8 @@
 
 namespace BadChoice\Reports\Exporters;
 
+use BadChoice\Reports\DataTransformers\ApiReportDataTransformer;
+use BadChoice\Reports\DataTransformers\ReportDataTransformer;
 use BadChoice\Reports\DataTransformers\Transformers\Currency;
 use BadChoice\Reports\DataTransformers\Transformers\Decimal;
 
@@ -11,6 +13,7 @@ class ApiExporter extends BaseExporter
     {
         parent::__construct($fields, $collection);
         app()->bind(Currency::class, Decimal::class);
+        app()->bind(ReportDataTransformer::class, ApiReportDataTransformer::class);
     }
 
     public function export()
