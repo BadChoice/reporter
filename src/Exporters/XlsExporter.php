@@ -5,7 +5,9 @@ namespace BadChoice\Reports\Exporters;
 use BadChoice\Reports\DataTransformers\Transformers\Currency;
 use BadChoice\Reports\DataTransformers\Transformers\Decimal;
 use BadChoice\Reports\DataTransformers\Transformers\SheetDecimal;
+use BadChoice\Reports\Exports\BaseCollectionExport;
 use BadChoice\Reports\Exports\BaseExport;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 
 class XlsExporter extends BaseExporter
@@ -40,7 +42,11 @@ class XlsExporter extends BaseExporter
 
     public function generate()
     {
-        $this->exportData = new BaseExport($this->collection, $this->getExportFields());
+        $export = BaseExport::class;
+        if ($this->collection instanceof Collection) {
+            $export = BaseCollectionExport::class;
+        }
+        $this->exportData = new $export($this->collection, $this->getExportFields());
     }
 
     protected function getType()
