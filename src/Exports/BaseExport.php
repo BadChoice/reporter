@@ -15,7 +15,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class BaseExport implements WithTitle, WithMapping, FromQuery, WithHeadings, WithEvents
 {
-    private $query;
+    protected $query;
     private $mapping;
 
     public function __construct($query, $mapping)
