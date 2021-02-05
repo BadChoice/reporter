@@ -45,6 +45,9 @@ abstract class QueryFilters
             }
             return $this->$name($value);
         });
+        if (method_exists($this, 'onFiltersApplied')) {
+            $this->onFiltersApplied();
+        }
         return $this->builder;
     }
 
