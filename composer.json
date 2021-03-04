@@ -1,5 +1,5 @@
 {
-    "name": "badchoice/reporter",
+    "name": "paubenetprat/reporter",
     "description": "A reports package",
     "type": "library",
     "license": "MIT",
@@ -12,7 +12,8 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^7.2.5",
-        "laravel/framework": "8.*"
+        "laravel/framework": "8.*",
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev":{
         "fzaninotto/faker": "~1.4",
