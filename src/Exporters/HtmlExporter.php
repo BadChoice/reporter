@@ -55,7 +55,7 @@ class HtmlExporter extends BaseExporter
             $this->output .= "<tr>";
             foreach ($this->getExportFields() as $field) {
                 $classes = $field->hideMobile ? "hide-mobile" : "";
-                $value = $field->getValue($row);
+                $value = htmlentities($field->getValue($row));
                 if ($field->isNumeric())  {
                     $classes = "{$classes} text-right";
                 }
