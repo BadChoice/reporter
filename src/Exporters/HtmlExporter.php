@@ -58,6 +58,8 @@ class HtmlExporter extends BaseExporter
                 $value = $field->getValue($row);
                 if ($field->isNumeric())  {
                     $classes = "{$classes} text-right";
+                } else {
+                    $value = htmlentities($value);
                 }
                 $this->output .= "<td class='{$classes}'>{$value}</td>";
             }
