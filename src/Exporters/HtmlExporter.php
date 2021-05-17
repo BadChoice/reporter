@@ -59,7 +59,7 @@ class HtmlExporter extends BaseExporter
                 if ($field->isNumeric())  {
                     $classes = "{$classes} text-right";
                 } else {
-                    if ( $field->transformation != "link" ) {
+                    if ( !$field->transformation ) {
                         $value = htmlentities($value);
                     }
                 }
