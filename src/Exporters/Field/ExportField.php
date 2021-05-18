@@ -95,7 +95,11 @@ class ExportField
         if(is_array($this->transformation)){
             return $this->transformMany($row);
         }
-        return app(ReportDataTransformer::class)::transform($row, $this->field, data_get($row,$this->field), $this->transformation, $this->transformationData);
+        $fieldData = data_get($row,$this->field);
+        if (is_string($fieldData)){
+            $fieldData = htmlentities($fieldData);
+        }
+        return app(ReportDataTransformer::class)::transform($row, $this->field, $fieldData, $this->transformation, $this->transformationData);
     }
 
     private function transformMany($row)
