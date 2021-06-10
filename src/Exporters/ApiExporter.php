@@ -10,6 +10,7 @@ use BadChoice\Reports\DataTransformers\Transformers\Currency;
 use BadChoice\Reports\DataTransformers\Transformers\Decimal;
 use BadChoice\Reports\DataTransformers\Transformers\Percentage;
 use BadChoice\Reports\DataTransformers\Transformers\WeightDecimal;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ApiExporter extends BaseExporter
 {
@@ -39,7 +40,7 @@ class ApiExporter extends BaseExporter
 
     protected function generate()
     {
-        $this->collection->getCollection()->transform(function($item, $key) {
+        ($this->collection instanceof LengthAwarePaginator ? $this->collection->getCollection() : $this->collection)->transform(function($item, $key) {
             return $this->getExportFields()->mapWithKeys(function ($field) use (&$item) {
                 return [$this->getFieldTitle($field) => $field->getValue($item)];
             });
