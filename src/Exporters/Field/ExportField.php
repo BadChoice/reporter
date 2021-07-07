@@ -90,13 +90,13 @@ class ExportField
         return $this->title ? : $this->field;
     }
 
-    public function getValue($row)
+    public function getValue($row, $protectionXSS = true)
     {
         if(is_array($this->transformation)){
             return $this->transformMany($row);
         }
         $fieldData = data_get($row,$this->field);
-        if (is_string($fieldData)){
+        if ($protectionXSS && is_string($fieldData)){
             $fieldData = htmlentities($fieldData);
         }
         return app(ReportDataTransformer::class)::transform($row, $this->field, $fieldData, $this->transformation, $this->transformationData);
