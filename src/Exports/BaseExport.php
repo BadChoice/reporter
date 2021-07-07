@@ -50,12 +50,12 @@ class BaseExport implements WithTitle, WithMapping, FromQuery, WithHeadings, Wit
     {
         return $this->mapping->map(function ($exportField) use ($product) {
             if ($exportField->isPercentage()) {
-                return $this->stringToFloat($exportField->getValue($product)) / 100.0;
+                return $this->stringToFloat($exportField->getValue($product, false)) / 100.0;
             }
             if ($exportField->isNumeric()) {
-                return $this->stringToFloat($exportField->getValue($product));
+                return $this->stringToFloat($exportField->getValue($product, false));
             }
-            return $exportField->getValue($product);
+            return $exportField->getValue($product, false);
         })->toArray();
     }
 
