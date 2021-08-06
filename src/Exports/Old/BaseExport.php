@@ -37,7 +37,27 @@ class BaseExport implements WithTitle, WithMapping, FromQuery, WithHeadings
     public function map($product): array
     {
         return collect($this->fields)->map(function ($exportField) use ($product) {
-            return $product->$exportField;
+            return $this->getValueFromField($product,$exportField);
         })->toArray();
+    }
+
+    private function getValueFromField($row, $composedField)
+    {
+        $fields = explode('.', $composedField);
+        if (count($fields) <= 1) {
+            return $row->$composedField;
+        }
+        $value = $row;
+        foreach ($fields as $field) {
+            if ($value == null) {
+                return "-";
+            }
+            if (is_array($value)) {
+                $value = ($value[$field]) ? $value[$field] : null;
+            } else {
+                $value = ($value->$field) ? $value->$field : null;
+            }
+        }
+        return $value;
     }
 }
