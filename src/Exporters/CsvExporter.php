@@ -85,7 +85,7 @@ class CsvExporter extends BaseExporter
     private function writeRow($row)
     {
         foreach ($this->getExportFields() as $field) {
-            $this->output .= $field->getValue($row) . ';';
+            $this->output .= $field->getValue($row, false) . ';';
         }
         $this->output .= PHP_EOL;
     }
