@@ -1,5 +1,5 @@
 {
-    "name": "badchoice/reporter",
+    "name": "revosystems/reporter",
     "description": "A reports package",
     "type": "library",
     "license": "MIT",
@@ -11,8 +11,8 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^7.2.5",
-        "laravel/framework": "^7.0",
+        "php": "^7.3",
+        "laravel/framework": "8.x",
         "maatwebsite/excel": "^3.1"
     },
     "require-dev":{
