@@ -8,6 +8,7 @@ class Numeric implements TransformsValueInterface
 {
     public function transform($value)
     {
+        $value = rtrim(rtrim($value, '0'), '.');
     	return $value ? : 0;
     }
 }
