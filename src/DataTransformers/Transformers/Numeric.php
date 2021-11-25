@@ -8,7 +8,6 @@ class Numeric implements TransformsValueInterface
 {
     public function transform($value)
     {
-        $value = (float) $value;
-    	return $value ? : 0;
+    	return $value ? (float) $value : 0;
     }
 }
