@@ -76,18 +76,16 @@ class CsvExporter extends BaseExporter
 
     private function writeHeader()
     {
-        foreach ($this->getExportFields() as $field) {
-            $this->output .= $field->getTitle() . ';';
+        foreach ($exportFields = $this->getExportFields() as $index => $field) {
+            $this->output .= $field->getTitle() . ($index === $exportFields->keys()->last() ? PHP_EOL : ';');
         }
-        $this->output .= PHP_EOL;
     }
 
     private function writeRow($row)
     {
-        foreach ($this->getExportFields() as $field) {
-            $this->output .= $field->getValue($row, false) . ';';
+        foreach ($exportFields = $this->getExportFields() as $index => $field) {
+            $this->output .= $field->getValue($row, false) . ($index === $exportFields->keys()->last() ? PHP_EOL : ';');
         }
-        $this->output .= PHP_EOL;
     }
 
     protected function getType()
