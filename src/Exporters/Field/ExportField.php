@@ -97,7 +97,7 @@ class ExportField
         }
         $fieldData = data_get($row,$this->field);
         if ($protectionXSS && is_string($fieldData)){
-            $fieldData = htmlentities($fieldData);
+            $fieldData = htmlspecialchars($fieldData);
         }
         return app(ReportDataTransformer::class)::transform($row, $this->field, $fieldData, $this->transformation, $this->transformationData);
     }
